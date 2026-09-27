@@ -9,16 +9,23 @@ services:
       MYSQL_DATABASE: bookstore
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3310:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Tự động chạy script tạo database & dữ liệu mẫu
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   book-store-api:
     build: .
     container_name: book-store-api
     restart: always
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy  # Chỉ khởi động Spring Boot khi MySQL đã sẵn sàng
     ports:
       - "8080:8080"
     environment:

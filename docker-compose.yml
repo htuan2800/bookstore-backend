@@ -6,8 +6,9 @@ services:
     container_name: mysql-db
     restart: always
     environment:
-      MYSQL_DATABASE: bookstore
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: bookstore
+      
     ports:
       - "3310:3306"
     volumes:

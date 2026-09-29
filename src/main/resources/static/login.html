@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Đăng nhập - BookNest</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<style type="text/tailwindcss">
+  .field { @apply w-full pl-11 pr-4 py-3 bg-surface-container-low text-on-surface placeholder:text-outline/70 text-body-md rounded-lg outline-none transition focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary; }
+  .lbl { @apply block text-label-md font-semibold text-on-surface mb-1.5; }
+  .ico { @apply absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] text-outline pointer-events-none; }
+  .btn { @apply w-full py-3.5 bg-primary hover:bg-primary-container text-on-primary text-label-lg rounded-lg shadow-sm active:scale-[0.98] transition flex items-center justify-center gap-2 disabled:opacity-60; }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body text-body-md min-h-screen">
+<header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+  <div class="h-16 max-w-md mx-auto px-margin-mobile flex items-center gap-space-sm">
+    <button aria-label="Quay lại" class="w-11 h-11 flex items-center justify-center rounded-full hover:text-primary" onclick="history.back()"><span class="material-symbols-outlined">arrow_back</span></button>
+    <div class="flex flex-col"><span class="text-label-sm tracking-wider uppercase text-outline">BookNest</span><h1 class="font-headline text-headline-sm">Đăng nhập</h1></div>
+  </div>
+</header>
+
+<main class="max-w-md mx-auto pt-20 pb-8 px-margin-mobile">
+  <div class="flex flex-col items-center text-center pt-2 pb-6 px-2">
+    <div class="relative w-24 h-24 mb-4 rounded-xl bg-surface-container-low shadow-sm flex items-center justify-center">
+      <span class="material-symbols-outlined text-primary text-[48px]" style="font-variation-settings:'FILL' 1">menu_book</span>
+      <div class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-secondary-fixed flex items-center justify-center"><span class="material-symbols-outlined text-[14px] text-on-secondary-fixed" style="font-variation-settings:'FILL' 1">auto_stories</span></div>
+    </div>
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high mb-2">
+      <span class="material-symbols-outlined text-[14px] text-tertiary">local_cafe</span>
+      <span class="text-label-sm text-tertiary tracking-wide uppercase">Tiệm Sách Nhỏ</span>
+    </div>
+    <h2 class="font-headline text-headline-lg tracking-tight">Chào mừng trở lại</h2>
+    <p class="text-body-md text-on-surface-variant mt-1 max-w-[280px]">Tiếp tục hành trình đọc sách và nuôi dưỡng tâm hồn của bạn</p>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+    <form id="loginForm" class="space-y-space-md" novalidate>
+      <p id="formInfo" class="hidden text-body-sm bg-surface-container text-on-surface rounded-lg px-3 py-2">Đăng ký thành công. Hãy đăng nhập để tiếp tục.</p>
+      <p id="formError" role="alert" class="hidden text-body-sm bg-error-container text-on-error-container rounded-lg px-3 py-2"></p>
+
+      <div>
+        <label class="lbl" for="identifier">Tên đăng nhập hoặc Email</label>
+        <div class="relative"><span class="material-symbols-outlined ico">person</span>
+          <input class="field" id="identifier" type="text" autocomplete="username" placeholder="tendangnhap hoặc ban@email.com" required/></div>
+      </div>
+      <div>
+        <label class="lbl" for="password">Mật khẩu</label>
+        <div class="relative"><span class="material-symbols-outlined ico">lock</span>
+          <input class="field pr-11" id="password" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu của bạn" required/>
+          <button type="button" id="togglePw" aria-label="Ẩn hoặc hiện mật khẩu" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-on-surface">
+            <span class="material-symbols-outlined text-[20px]" id="eye">visibility_off</span></button></div>
+      </div>
+      <label class="flex items-center gap-2 cursor-pointer select-none text-body-sm text-on-surface-variant">
+        <input id="rememberMe" type="checkbox" checked class="w-4 h-4 accent-primary"/> Ghi nhớ tôi
+      </label>
+      <button class="btn" id="submitBtn" type="submit"><span>Đăng nhập</span></button>
+    </form>
+  </div>
+
+  <p class="text-center mt-6 text-body-md text-on-surface-variant">Chưa có tài khoản?
+    <a class="text-label-lg text-primary font-bold ml-1 hover:underline" href="register.html">Đăng ký ngay</a></p>
+</main>
+
+<script src="js/auth.js"></script>
+<script>
+  bindPasswordToggle('password', 'togglePw', 'eye');
+  if (new URLSearchParams(location.search).has('registered')) $('formInfo').classList.remove('hidden');
+
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); hideError();
+    const identifier = $('identifier').value.trim(), password = $('password').value;
+    if (!identifier || !password) return showError('Vui lòng nhập tên đăng nhập/email và mật khẩu.');
+    setBusy($('submitBtn'), true, 'Đăng nhập');
+    try {
+      const r = await postJson('/api/auth/login', { identifier, password });
+      if (!r.ok) return showError(r.text || 'Đăng nhập thất bại.');
+      const store = $('rememberMe').checked ? localStorage : sessionStorage;
+      store.setItem('token', r.data.token);
+      store.setItem('fullName', r.data.fullName || r.data.username);
+      store.setItem('role', r.data.role);
+      location.href = HOME_URL;
+    } catch (_) { showError('Không kết nối được máy chủ. Hãy kiểm tra ứng dụng đang chạy.'); }
+    finally { setBusy($('submitBtn'), false, 'Đăng nhập'); }
+  });
+</script>
+</body>
+</html>

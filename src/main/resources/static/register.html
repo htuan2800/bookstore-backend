@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Đăng ký - BookNest</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<style type="text/tailwindcss">
+  .field { @apply w-full pl-11 pr-4 py-2.5 bg-surface-container-low text-on-surface placeholder:text-outline/70 text-body-md rounded-lg outline-none transition focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary; }
+  .lbl { @apply block text-label-md font-semibold text-on-surface-variant mb-1.5; }
+  .ico { @apply absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] text-outline pointer-events-none; }
+  .btn { @apply w-full py-3 bg-primary hover:bg-primary-container text-on-primary text-label-lg rounded-lg shadow-md active:scale-[0.99] transition flex items-center justify-center gap-2 disabled:opacity-60; }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body text-body-md min-h-screen">
+<header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+  <div class="h-16 max-w-md mx-auto px-margin-mobile flex items-center gap-space-sm">
+    <button aria-label="Quay lại" class="w-11 h-11 flex items-center justify-center rounded-full hover:text-primary" onclick="history.back()"><span class="material-symbols-outlined">arrow_back</span></button>
+    <div class="flex flex-col"><span class="text-label-sm tracking-wider uppercase text-outline">BookNest</span><h1 class="font-headline text-headline-sm">Đăng ký</h1></div>
+  </div>
+</header>
+
+<main class="max-w-md mx-auto pt-20 pb-8 px-margin-mobile">
+  <div class="flex flex-col items-center text-center mt-2 mb-6">
+    <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center shadow-sm mb-3"><span class="material-symbols-outlined text-primary text-[36px]" style="font-variation-settings:'FILL' 1">menu_book</span></div>
+    <h2 class="font-headline text-headline-lg mb-1">Tạo tài khoản mới</h2>
+    <p class="text-body-md text-on-surface-variant max-w-xs">Gia nhập cộng đồng người yêu sách BookNest để cùng sẻ chia trang sách hay.</p>
+  </div>
+
+  <form id="registerForm" class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-md flex flex-col gap-4" novalidate>
+    <p id="formError" role="alert" class="hidden text-body-sm bg-error-container text-on-error-container rounded-lg px-3 py-2"></p>
+
+    <div><label class="lbl" for="fullName">Họ và tên</label>
+      <div class="relative"><span class="material-symbols-outlined ico">badge</span><input class="field" id="fullName" type="text" autocomplete="name" placeholder="Nguyễn Văn A"/></div></div>
+    <div><label class="lbl" for="username">Tên đăng nhập</label>
+      <div class="relative"><span class="material-symbols-outlined ico">person</span><input class="field" id="username" type="text" autocomplete="username" placeholder="nguyenvana"/></div></div>
+    <div><label class="lbl" for="email">Email</label>
+      <div class="relative"><span class="material-symbols-outlined ico">alternate_email</span><input class="field" id="email" type="email" autocomplete="email" placeholder="ban@email.com"/></div></div>
+
+    <div><label class="lbl" for="password">Mật khẩu</label>
+      <div class="relative"><span class="material-symbols-outlined ico">key</span>
+        <input class="field pr-10" id="password" type="password" autocomplete="new-password" placeholder="Tối thiểu 8 ký tự"/>
+        <button type="button" id="togglePw" aria-label="Hiện hoặc ẩn mật khẩu" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-outline hover:text-on-surface"><span class="material-symbols-outlined text-[20px]" id="eye">visibility_off</span></button></div>
+      <div class="mt-2 flex items-center justify-between text-label-sm"><span class="text-outline">Độ mạnh mật khẩu:</span><span id="strengthText" class="text-outline font-semibold">Chưa nhập</span></div>
+      <div class="grid grid-cols-3 gap-1.5 h-1.5 mt-1"><div id="bar1" class="rounded-full bg-surface-variant"></div><div id="bar2" class="rounded-full bg-surface-variant"></div><div id="bar3" class="rounded-full bg-surface-variant"></div></div></div>
+
+    <div><label class="lbl" for="confirmPassword">Xác nhận lại mật khẩu</label>
+      <div class="relative"><span class="material-symbols-outlined ico">verified_user</span>
+        <input class="field pr-10" id="confirmPassword" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu vừa tạo"/>
+        <span id="matchIcon" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[20px] text-outline/40">check_circle</span></div></div>
+
+    <label class="flex items-start gap-2.5 text-body-sm text-on-surface-variant cursor-pointer">
+      <input id="terms" type="checkbox" class="mt-0.5 w-4 h-4 accent-primary"/>
+      <span>Tôi đồng ý với <a class="text-primary font-semibold hover:underline" href="#">Điều khoản dịch vụ</a> và <a class="text-primary font-semibold hover:underline" href="#">Chính sách bảo mật</a> của BookNest.</span>
+    </label>
+    <button class="btn" id="submitBtn" type="submit"><span>Tạo tài khoản</span></button>
+  </form>
+
+  <p class="text-center mt-6 text-body-md text-on-surface-variant">Đã có tài khoản?
+    <a class="text-title-md text-primary hover:underline ml-1" href="login.html">Đăng nhập</a></p>
+</main>
+
+<script src="js/auth.js"></script>
+<script>
+  bindPasswordToggle('password', 'togglePw', 'eye');
+
+  function score(p) {
+    if (!p) return 0;
+    let s = 1;
+    if (p.length >= 8) s++;
+    if (p.length >= 10 && /[A-Za-z]/.test(p) && /\d/.test(p)) s++;
+    return s;
+  }
+  const LEVELS = [['Chưa nhập', 'text-outline', ''], ['Yếu', 'text-error', 'bg-error'],
+                  ['Trung bình', 'text-tertiary', 'bg-tertiary-fixed-dim'], ['Mạnh', 'text-primary', 'bg-primary']];
+  function updateStrength() {
+    const s = score($('password').value), [label, textCls, barCls] = LEVELS[s];
+    $('strengthText').textContent = label;
+    $('strengthText').className = textCls + ' font-semibold';
+    [1, 2, 3].forEach((i) => { $('bar' + i).className = 'rounded-full ' + (i <= s ? barCls : 'bg-surface-variant'); });
+    updateMatch();
+  }
+  function updateMatch() {
+    const p = $('password').value, c = $('confirmPassword').value, icon = $('matchIcon');
+    const ok = c && p === c;
+    icon.textContent = !c ? 'check_circle' : ok ? 'check_circle' : 'cancel';
+    icon.className = 'material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[20px] ' + (!c ? 'text-outline/40' : ok ? 'text-primary' : 'text-error');
+  }
+  $('password').addEventListener('input', updateStrength);
+  $('confirmPassword').addEventListener('input', updateMatch);
+
+  $('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); hideError();
+    const body = {
+      fullName: $('fullName').value.trim(), username: $('username').value.trim(), email: $('email').value.trim(),
+      password: $('password').value, confirmPassword: $('confirmPassword').value
+    };
+    if (!body.fullName || !body.username || !body.email || !body.password) return showError('Vui lòng điền đầy đủ các ô còn trống.');
+    if (body.password.length < 8) return showError('Mật khẩu cần tối thiểu 8 ký tự.');
+    if (body.password !== body.confirmPassword) return showError('Mật khẩu xác nhận không khớp.');
+    if (!$('terms').checked) return showError('Bạn cần đồng ý với điều khoản để tiếp tục.');
+    setBusy($('submitBtn'), true, 'Tạo tài khoản');
+    try {
+      const r = await postJson('/api/auth/register', body);
+      if (r.ok) location.href = 'login.html?registered=1';
+      else showError(r.text || 'Đăng ký thất bại.');
+    } catch (_) { showError('Không kết nối được máy chủ. Hãy kiểm tra ứng dụng đang chạy.'); }
+    finally { setBusy($('submitBtn'), false, 'Tạo tài khoản'); }
+  });
+</script>
+</body>
+</html>

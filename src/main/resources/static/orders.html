@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Đơn hàng - BookNest</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<style type="text/tailwindcss">
+  .nav-btn { @apply flex flex-col items-center gap-0.5 text-outline text-label-sm transition; }
+  .nav-btn.active { @apply text-primary; }
+  .status-badge { @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-label-sm font-semibold; }
+</style>
+<style>
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp .3s ease-out both; }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body text-body-md min-h-screen pb-20">
+
+<!-- HEADER -->
+<header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+  <div class="h-14 max-w-lg mx-auto px-4 flex items-center gap-3">
+    <button onclick="location.href='index.html'" class="w-10 h-10 rounded-full flex items-center justify-center hover:text-primary">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <div>
+      <span class="text-label-sm tracking-wider uppercase text-outline">BookNest</span>
+      <h1 class="font-headline text-headline-sm">Đơn hàng của tôi</h1>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-lg mx-auto pt-20 pb-8 px-4">
+  <!-- Loading -->
+  <div id="loading" class="text-center py-16">
+    <span class="material-symbols-outlined text-[40px] text-outline animate-spin">progress_activity</span>
+    <p class="text-on-surface-variant mt-2">Đang tải đơn hàng...</p>
+  </div>
+
+  <!-- Empty -->
+  <div id="emptyState" class="hidden text-center py-16">
+    <span class="material-symbols-outlined text-[72px] text-outline/30" style="font-variation-settings:'FILL' 1">receipt_long</span>
+    <h2 class="font-headline text-headline-sm mt-3">Chưa có đơn hàng</h2>
+    <p class="text-on-surface-variant mt-1 mb-4">Bạn chưa đặt đơn hàng nào</p>
+    <a href="index.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg text-label-lg hover:bg-primary-container transition">
+      <span class="material-symbols-outlined text-[18px]">storefront</span>Mua sắm ngay
+    </a>
+  </div>
+
+  <!-- Order list -->
+  <div id="orderList" class="hidden space-y-4"></div>
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 inset-x-0 z-50 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.06)]">
+  <div class="max-w-lg mx-auto h-16 flex items-center justify-around px-2">
+    <a href="index.html" class="nav-btn"><span class="material-symbols-outlined text-[24px]">home</span><span>Trang chủ</span></a>
+    <a href="#" class="nav-btn"><span class="material-symbols-outlined text-[24px]">search</span><span>Tìm kiếm</span></a>
+    <a href="cart.html" class="nav-btn"><span class="material-symbols-outlined text-[24px]">shopping_cart</span><span>Giỏ hàng</span></a>
+    <a href="orders.html" class="nav-btn active"><span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">receipt_long</span><span>Đơn hàng</span></a>
+  </div>
+</nav>
+
+<!-- ORDER DETAIL MODAL -->
+<div id="detailModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeDetail()"></div>
+  <div class="absolute bottom-0 inset-x-0 max-w-lg mx-auto bg-surface-container-lowest rounded-t-3xl shadow-2xl transform transition-transform duration-300 translate-y-full" id="detailContent">
+    <div class="w-10 h-1 bg-outline/30 rounded-full mx-auto mt-3"></div>
+    <div class="p-5 pb-8 max-h-[80vh] overflow-y-auto" id="detailBody"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+if (!token) location.href = 'login.html';
+
+function authHeaders() {
+  return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+}
+
+function formatVND(n) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  const d = new Date(s);
+  return d.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+const STATUS_MAP = {
+  PENDING:   { label: 'Chờ xác nhận', icon: 'schedule',       cls: 'bg-amber-50 text-amber-700' },
+  CONFIRMED: { label: 'Đã xác nhận',  icon: 'check_circle',   cls: 'bg-blue-50 text-blue-700' },
+  SHIPPING:  { label: 'Đang giao',    icon: 'local_shipping',  cls: 'bg-indigo-50 text-indigo-700' },
+  DELIVERED: { label: 'Đã giao',      icon: 'done_all',        cls: 'bg-emerald-50 text-emerald-700' },
+  CANCELLED: { label: 'Đã hủy',       icon: 'cancel',          cls: 'bg-red-50 text-red-700' },
+};
+
+const $ = (id) => document.getElementById(id);
+let ordersData = [];
+
+function statusBadge(status) {
+  const s = STATUS_MAP[status] || { label: status, icon: 'help', cls: 'bg-surface-container text-on-surface-variant' };
+  return `<span class="status-badge ${s.cls}"><span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">${s.icon}</span>${s.label}</span>`;
+}
+
+function renderOrders() {
+  if (ordersData.length === 0) {
+    $('emptyState').classList.remove('hidden');
+    return;
+  }
+  $('orderList').classList.remove('hidden');
+  $('orderList').innerHTML = ordersData.map((order, i) => `
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden fade-up cursor-pointer hover:shadow-md transition" style="animation-delay:${i*0.06}s" onclick="showDetail(${order.id})">
+      <div class="p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-label-lg font-bold text-on-surface">#${order.id}</span>
+          ${statusBadge(order.status)}
+        </div>
+        <div class="flex items-center gap-1.5 text-body-sm text-on-surface-variant mb-3">
+          <span class="material-symbols-outlined text-[14px]">schedule</span>
+          ${formatDate(order.createdAt)}
+        </div>
+        <div class="space-y-1.5">
+          ${order.items.slice(0, 2).map(item => `
+            <div class="flex items-center gap-2 text-body-sm">
+              <span class="material-symbols-outlined text-[16px] text-outline">book</span>
+              <span class="truncate flex-1">${item.bookTitle}</span>
+              <span class="text-on-surface-variant">x${item.quantity}</span>
+            </div>
+          `).join('')}
+          ${order.items.length > 2 ? `<p class="text-body-sm text-outline ml-6">+${order.items.length - 2} sản phẩm khác</p>` : ''}
+        </div>
+      </div>
+      <div class="bg-surface-container px-4 py-2.5 flex items-center justify-between">
+        <span class="text-body-sm text-on-surface-variant">Tổng cộng</span>
+        <span class="text-title-md text-primary font-bold">${formatVND(order.totalAmount)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showDetail(orderId) {
+  const order = ordersData.find(o => o.id === orderId);
+  if (!order) return;
+
+  $('detailBody').innerHTML = `
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-headline text-headline-sm">Đơn hàng #${order.id}</h2>
+      ${statusBadge(order.status)}
+    </div>
+
+    <div class="bg-surface-container rounded-xl p-3 mb-4">
+      <div class="flex items-center gap-2 text-body-sm text-on-surface-variant mb-1">
+        <span class="material-symbols-outlined text-[16px]">schedule</span>${formatDate(order.createdAt)}
+      </div>
+      <div class="flex items-center gap-2 text-body-sm text-on-surface-variant">
+        <span class="material-symbols-outlined text-[16px]">location_on</span>${order.shippingAddress}
+      </div>
+    </div>
+
+    <h3 class="text-label-lg font-semibold mb-2 flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-[16px]">inventory_2</span>Chi tiết sản phẩm
+    </h3>
+    <div class="space-y-2 mb-4">
+      ${order.items.map(item => `
+        <div class="flex items-center justify-between bg-surface-container-low rounded-lg p-3">
+          <div class="flex-1 min-w-0 mr-3">
+            <p class="text-body-md font-semibold truncate">${item.bookTitle}</p>
+            <p class="text-body-sm text-on-surface-variant">${formatVND(item.price)} × ${item.quantity}</p>
+          </div>
+          <span class="text-label-lg text-primary font-bold whitespace-nowrap">${formatVND(item.subtotal)}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <hr class="border-surface-variant mb-3"/>
+    <div class="flex items-center justify-between">
+      <span class="text-title-md font-bold">Tổng cộng</span>
+      <span class="text-headline-sm text-primary font-bold">${formatVND(order.totalAmount)}</span>
+    </div>
+  `;
+
+  const modal = $('detailModal');
+  const content = $('detailContent');
+  modal.classList.remove('hidden');
+  requestAnimationFrame(() => {
+    content.classList.remove('translate-y-full');
+    content.classList.add('translate-y-0');
+  });
+}
+
+function closeDetail() {
+  const content = $('detailContent');
+  content.classList.remove('translate-y-0');
+  content.classList.add('translate-y-full');
+  setTimeout(() => $('detailModal').classList.add('hidden'), 300);
+}
+
+async function loadOrders() {
+  try {
+    const res = await fetch(API + '/api/orders', { headers: authHeaders() });
+    if (res.status === 401 || res.status === 403) { location.href = 'login.html'; return; }
+    ordersData = await res.json();
+    $('loading').classList.add('hidden');
+    renderOrders();
+  } catch (e) {
+    $('loading').innerHTML = '<p class="text-on-surface-variant">Không thể tải đơn hàng</p>';
+  }
+}
+
+loadOrders();
+</script>
+</body>
+</html>

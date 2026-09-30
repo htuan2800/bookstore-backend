@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Quản trị hệ thống - BookNest Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<style>
+  .field {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background-color: #f6f3ed;
+    color: #1c1c18;
+    border-radius: 0.5rem;
+    outline: none;
+    border: 1px solid #e5e2dc;
+    transition: all 0.2s;
+    font-size: 13px;
+  }
+  .field:focus {
+    background-color: #ffffff;
+    border-color: #9f3c16;
+    box-shadow: 0 0 0 2px rgba(159, 60, 22, 0.2);
+  }
+  .lbl {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1c1c18;
+    margin-bottom: 0.25rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .btn-primary {
+    padding: 0.5rem 1rem;
+    background-color: #9f3c16;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary:hover {
+    background-color: #bf542c;
+  }
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .btn-outline {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #d8c2ba;
+    background-color: transparent;
+    color: #1c1c18;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+  }
+  .btn-outline:hover {
+    background-color: #f0eee8;
+    border-color: #8a726a;
+  }
+  .tab-btn {
+    padding: 0.625rem 1rem;
+    font-size: 13px;
+    font-weight: 600;
+    color: #57423b;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  .tab-btn:hover {
+    color: #9f3c16;
+  }
+  .tab-btn.active {
+    color: #9f3c16;
+    border-bottom-color: #9f3c16;
+  }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body text-body-md min-h-screen">
+
+<!-- HEADER -->
+<header class="fixed top-0 inset-x-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
+        <span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">admin_panel_settings</span>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-headline text-title-md font-bold">BookNest</span>
+          <span class="badge bg-primary/15 text-primary text-[11px] uppercase tracking-wider">Admin Portal</span>
+        </div>
+        <p class="text-label-sm text-outline hidden sm:block">Quản lý kho sách & theo dõi đơn hàng</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="btn-outline">
+        <span class="material-symbols-outlined text-[18px]">storefront</span>
+        <span class="hidden sm:inline">Xem Tiệm Sách</span>
+      </a>
+      <div class="h-6 w-px bg-outline-variant/50 hidden sm:block"></div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-outline">account_circle</span>
+        <span id="adminName" class="text-label-md font-semibold">Admin</span>
+      </div>
+      <button id="logoutBtn" class="w-9 h-9 rounded-lg hover:bg-error-container/30 hover:text-error flex items-center justify-center text-outline transition" title="Đăng xuất">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="max-w-6xl mx-auto pt-24 pb-12 px-4">
+
+  <!-- TABS NAVIGATION -->
+  <div class="flex items-center border-b border-outline-variant/30 mb-6 gap-2">
+    <button id="tabBooksBtn" class="tab-btn active" onclick="switchTab('books')">
+      <span class="material-symbols-outlined text-[20px]">menu_book</span>
+      <span>Quản lý Sách</span>
+      <span id="booksBadgeCount" class="badge bg-surface-container text-on-surface-variant text-[11px]">0</span>
+    </button>
+    <button id="tabOrdersBtn" class="tab-btn" onclick="switchTab('orders')">
+      <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+      <span>Quản lý Đơn hàng</span>
+      <span id="ordersBadgeCount" class="badge bg-surface-container text-on-surface-variant text-[11px]">0</span>
+    </button>
+  </div>
+
+  <!-- TAB 1: QUẢN LÝ SÁCH -->
+  <section id="tabBooksSection" class="space-y-6">
+    <!-- STATS ROW -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[28px]">library_books</span>
+        </div>
+        <div>
+          <p class="text-label-sm text-outline">Tổng số đầu sách</p>
+          <p id="statTotalBooks" class="text-headline-sm font-bold">--</p>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-secondary-fixed/50 text-on-secondary-fixed flex items-center justify-center">
+          <span class="material-symbols-outlined text-[28px]">inventory_2</span>
+        </div>
+        <div>
+          <p class="text-label-sm text-outline">Tổng số lượng tồn</p>
+          <p id="statTotalStock" class="text-headline-sm font-bold">--</p>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-error-container text-error flex items-center justify-center">
+          <span class="material-symbols-outlined text-[28px]">warning</span>
+        </div>
+        <div>
+          <p class="text-label-sm text-outline">Sách sắp hết / Hết hàng</p>
+          <p id="statOutOfStock" class="text-headline-sm font-bold">--</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="relative w-full sm:w-80">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+        <input id="searchBookInput" type="text" placeholder="Tìm theo tên sách..." class="field pl-10 py-2 text-body-sm" oninput="filterBooks()"/>
+      </div>
+      <button class="btn-primary w-full sm:w-auto" onclick="openAddBookModal()">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        <span>Thêm sách mới</span>
+      </button>
+    </div>
+
+    <!-- BOOKS TABLE -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-outline-variant/30">
+              <th class="py-3 px-4">#ID</th>
+              <th class="py-3 px-4">Tên sách</th>
+              <th class="py-3 px-4">Tác giả</th>
+              <th class="py-3 px-4">Thể loại</th>
+              <th class="py-3 px-4">Giá bán</th>
+              <th class="py-3 px-4">Tồn kho</th>
+              <th class="py-3 px-4 text-right">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="booksTableBody" class="divide-y divide-outline-variant/20 text-body-sm">
+            <tr>
+              <td colspan="7" class="py-8 text-center text-outline">Đang tải dữ liệu sách...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: QUẢN LÝ ĐƠN HÀNG -->
+  <section id="tabOrdersSection" class="hidden space-y-6">
+    <!-- STATS ROW ORDERS -->
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+        <p class="text-label-sm text-outline">Tổng số đơn</p>
+        <p id="statTotalOrders" class="text-headline-sm font-bold mt-1">--</p>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+        <p class="text-label-sm text-amber-700">Chờ xác nhận</p>
+        <p id="statPendingOrders" class="text-headline-sm font-bold text-amber-700 mt-1">--</p>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+        <p class="text-label-sm text-blue-700">Đang giao hàng</p>
+        <p id="statShippedOrders" class="text-headline-sm font-bold text-blue-700 mt-1">--</p>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+        <p class="text-label-sm text-emerald-700">Tổng doanh thu</p>
+        <p id="statTotalRevenue" class="text-headline-sm font-bold text-emerald-700 mt-1">--</p>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-label-md font-semibold text-outline">Lọc trạng thái:</span>
+        <select id="statusFilter" class="field py-1.5 px-3 text-body-sm w-auto cursor-pointer" onchange="filterOrders()">
+          <option value="ALL">Tất cả đơn hàng</option>
+          <option value="PENDING">Chờ xác nhận (PENDING)</option>
+          <option value="CONFIRMED">Đã xác nhận (CONFIRMED)</option>
+          <option value="SHIPPED">Đang giao hàng (SHIPPED)</option>
+          <option value="DELIVERED">Đã giao thành công (DELIVERED)</option>
+          <option value="CANCELLED">Đã hủy (CANCELLED)</option>
+        </select>
+      </div>
+      <button class="btn-outline" onclick="loadAdminOrders()">
+        <span class="material-symbols-outlined text-[18px]">refresh</span>
+        <span>Làm mới</span>
+      </button>
+    </div>
+
+    <!-- ORDERS TABLE -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-outline-variant/30">
+              <th class="py-3 px-4">#Đơn</th>
+              <th class="py-3 px-4">Khách hàng</th>
+              <th class="py-3 px-4">Ngày đặt</th>
+              <th class="py-3 px-4">Địa chỉ giao</th>
+              <th class="py-3 px-4">Tổng tiền</th>
+              <th class="py-3 px-4">Trạng thái</th>
+              <th class="py-3 px-4 text-right">Chi tiết</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody" class="divide-y divide-outline-variant/20 text-body-sm">
+            <tr>
+              <td colspan="7" class="py-8 text-center text-outline">Đang tải danh sách đơn hàng...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODAL THÊM / SỬA SÁCH -->
+<div id="bookModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeBookModal()"></div>
+  <div class="relative max-w-lg mx-auto mt-20 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-outline-variant/30">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant/20">
+      <h3 id="bookModalTitle" class="font-headline text-title-lg font-bold">Thêm sách mới</h3>
+      <button onclick="closeBookModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form id="bookForm" onsubmit="handleBookSubmit(event)" class="space-y-4">
+      <input type="hidden" id="editBookId" value=""/>
+
+      <div>
+        <label class="lbl" for="bookTitle">Tên cuốn sách <span class="text-error">*</span></label>
+        <input class="field" id="bookTitle" type="text" placeholder="Nhập tên sách..." required/>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl" for="bookPrice">Giá bán (VND) <span class="text-error">*</span></label>
+          <input class="field" id="bookPrice" type="number" min="0" step="1000" placeholder="50000" required/>
+        </div>
+        <div>
+          <label class="lbl" for="bookStock">Số lượng tồn <span class="text-error">*</span></label>
+          <input class="field" id="bookStock" type="number" min="0" placeholder="10" required/>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl" for="bookAuthor">Tác giả</label>
+          <select id="bookAuthor" class="field cursor-pointer">
+            <option value="1">1 - Tô Hoài</option>
+            <option value="2">2 - J.K. Rowling</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl" for="bookCategory">Thể loại</label>
+          <select id="bookCategory" class="field cursor-pointer">
+            <option value="1">1 - Văn học Việt Nam</option>
+            <option value="2">2 - Viễn tưởng</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="lbl" for="bookDesc">Mô tả tóm tắt</label>
+        <textarea class="field resize-none h-20" id="bookDesc" placeholder="Mô tả nội dung tác phẩm..."></textarea>
+      </div>
+
+      <div id="bookFormError" class="hidden text-body-sm text-error bg-error-container/40 p-2.5 rounded-lg"></div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" class="btn-outline" onclick="closeBookModal()">Hủy</button>
+        <button type="submit" id="bookSubmitBtn" class="btn-primary">
+          <span class="material-symbols-outlined text-[18px]">check</span>
+          <span id="bookSubmitBtnText">Lưu lại</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL CHI TIẾT ĐƠN HÀNG -->
+<div id="orderDetailModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeOrderDetailModal()"></div>
+  <div class="relative max-w-lg mx-auto mt-20 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-outline-variant/30">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant/20">
+      <div>
+        <h3 id="orderModalTitle" class="font-headline text-title-lg font-bold">Chi tiết đơn hàng</h3>
+        <p id="orderModalSubtitle" class="text-label-sm text-outline"></p>
+      </div>
+      <button onclick="closeOrderDetailModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div id="orderModalContent" class="space-y-4"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+let role = localStorage.getItem('role') || sessionStorage.getItem('role');
+const fullName = localStorage.getItem('fullName') || sessionStorage.getItem('fullName');
+
+// Dự phòng: Giải mã JWT token để lấy quyền thực tế nếu storage bị thiếu
+if (token && (!role || role !== 'ROLE_ADMIN')) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(window.atob(base64));
+    if (payload.role) {
+      role = payload.role;
+      (localStorage.getItem('token') ? localStorage : sessionStorage).setItem('role', role);
+    }
+  } catch (_) {}
+}
+
+// BẢO VỆ PHÂN QUYỀN: Chỉ cho phép ROLE_ADMIN truy cập
+if (!token || role !== 'ROLE_ADMIN') {
+  alert('Bạn cần đăng nhập với tài khoản Quản trị viên (ROLE_ADMIN) để vào trang này.');
+  location.href = 'login.html';
+}
+
+document.getElementById('adminName').textContent = fullName || 'Quản Trị Viên';
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.clear();
+  sessionStorage.clear();
+  location.href = 'login.html';
+});
+
+function authHeaders() {
+  return {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json'
+  };
+}
+
+function formatVND(n) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  const d = new Date(s);
+  return d.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+const STATUS_MAP = {
+  PENDING:   { label: 'Chờ xác nhận', cls: 'bg-amber-100 text-amber-800' },
+  CONFIRMED: { label: 'Đã xác nhận', cls: 'bg-blue-100 text-blue-800' },
+  SHIPPED:   { label: 'Đang giao',   cls: 'bg-purple-100 text-purple-800' },
+  DELIVERED: { label: 'Đã giao',     cls: 'bg-emerald-100 text-emerald-800' },
+  CANCELLED: { label: 'Đã hủy',      cls: 'bg-red-100 text-red-800' }
+};
+
+// TAB SWITCHING
+function switchTab(tab) {
+  const booksSec = document.getElementById('tabBooksSection');
+  const ordersSec = document.getElementById('tabOrdersSection');
+  const booksBtn = document.getElementById('tabBooksBtn');
+  const ordersBtn = document.getElementById('tabOrdersBtn');
+
+  if (tab === 'books') {
+    booksSec.classList.remove('hidden');
+    ordersSec.classList.add('hidden');
+    booksBtn.classList.add('active');
+    ordersBtn.classList.remove('active');
+  } else {
+    booksSec.classList.add('hidden');
+    ordersSec.classList.remove('hidden');
+    booksBtn.classList.remove('active');
+    ordersBtn.classList.add('active');
+    loadAdminOrders();
+  }
+}
+
+// === 1. QUẢN LÝ SÁCH ===
+let allBooks = [];
+
+async function loadAdminBooks() {
+  try {
+    const res = await fetch(API + '/api/books');
+    if (!res.ok) throw new Error('API error');
+    allBooks = await res.json();
+    updateBooksStats();
+    renderBooksTable(allBooks);
+  } catch (err) {
+    document.getElementById('booksTableBody').innerHTML = `
+      <tr><td colspan="7" class="py-8 text-center text-error">Lỗi khi tải dữ liệu sách.</td></tr>
+    `;
+  }
+}
+
+function updateBooksStats() {
+  document.getElementById('statTotalBooks').textContent = allBooks.length;
+  document.getElementById('booksBadgeCount').textContent = allBooks.length;
+  const totalStock = allBooks.reduce((sum, b) => sum + (b.stockQuantity || 0), 0);
+  const outOfStock = allBooks.filter(b => (b.stockQuantity || 0) <= 0).length;
+  document.getElementById('statTotalStock').textContent = totalStock;
+  document.getElementById('statOutOfStock').textContent = outOfStock;
+}
+
+function renderBooksTable(books) {
+  const tbody = document.getElementById('booksTableBody');
+  if (books.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-outline">Không tìm thấy sách nào.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = books.map(b => `
+    <tr class="hover:bg-surface-container/30 transition">
+      <td class="py-3 px-4 font-mono font-semibold text-outline text-xs">#${b.id}</td>
+      <td class="py-3 px-4 font-semibold text-on-surface">${b.title}</td>
+      <td class="py-3 px-4 text-on-surface-variant">${b.author?.name || 'Không rõ'}</td>
+      <td class="py-3 px-4"><span class="badge bg-surface-container text-on-surface-variant">${b.category?.name || 'N/A'}</span></td>
+      <td class="py-3 px-4 font-semibold text-primary">${formatVND(b.price)}</td>
+      <td class="py-3 px-4">
+        <span class="badge ${b.stockQuantity > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+          ${b.stockQuantity > 0 ? b.stockQuantity + ' cuốn' : 'Hết hàng'}
+        </span>
+      </td>
+      <td class="py-3 px-4 text-right">
+        <div class="inline-flex items-center gap-1">
+          <button onclick="openEditBookModal(${b.id})" class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container transition" title="Sửa sách">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+          </button>
+          <button onclick="deleteBook(${b.id}, '${b.title.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition" title="Xóa sách">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterBooks() {
+  const q = document.getElementById('searchBookInput').value.toLowerCase().trim();
+  if (!q) {
+    renderBooksTable(allBooks);
+    return;
+  }
+  const filtered = allBooks.filter(b => b.title.toLowerCase().includes(q) || (b.author?.name || '').toLowerCase().includes(q));
+  renderBooksTable(filtered);
+}
+
+// Modal Thêm / Sửa Sách
+function openAddBookModal() {
+  document.getElementById('editBookId').value = '';
+  document.getElementById('bookModalTitle').textContent = 'Thêm sách mới';
+  document.getElementById('bookSubmitBtnText').textContent = 'Thêm sách';
+  document.getElementById('bookForm').reset();
+  document.getElementById('bookFormError').classList.add('hidden');
+  document.getElementById('bookModal').classList.remove('hidden');
+}
+
+function openEditBookModal(id) {
+  const book = allBooks.find(b => b.id === id);
+  if (!book) return;
+  document.getElementById('editBookId').value = book.id;
+  document.getElementById('bookModalTitle').textContent = 'Chỉnh sửa thông tin sách';
+  document.getElementById('bookSubmitBtnText').textContent = 'Cập nhật';
+  document.getElementById('bookTitle').value = book.title;
+  document.getElementById('bookPrice').value = book.price;
+  document.getElementById('bookStock').value = book.stockQuantity;
+  document.getElementById('bookDesc').value = book.description || '';
+  if (book.author?.id) document.getElementById('bookAuthor').value = book.author.id;
+  if (book.category?.id) document.getElementById('bookCategory').value = book.category.id;
+  document.getElementById('bookFormError').classList.add('hidden');
+  document.getElementById('bookModal').classList.remove('hidden');
+}
+
+function closeBookModal() {
+  document.getElementById('bookModal').classList.add('hidden');
+}
+
+async function handleBookSubmit(e) {
+  e.preventDefault();
+  const id = document.getElementById('editBookId').value;
+  const title = document.getElementById('bookTitle').value.trim();
+  const price = parseFloat(document.getElementById('bookPrice').value);
+  const stockQuantity = parseInt(document.getElementById('bookStock').value, 10);
+  const description = document.getElementById('bookDesc').value.trim();
+  const authorId = parseInt(document.getElementById('bookAuthor').value, 10);
+  const categoryId = parseInt(document.getElementById('bookCategory').value, 10);
+
+  const payload = { title, price, stockQuantity, description, authorId, categoryId };
+  const errBox = document.getElementById('bookFormError');
+  errBox.classList.add('hidden');
+
+  const btn = document.getElementById('bookSubmitBtn');
+  btn.disabled = true;
+
+  try {
+    const url = id ? `${API}/api/admin/books/${id}` : `${API}/api/admin/books`;
+    const method = id ? 'PUT' : 'POST';
+    const res = await fetch(url, {
+      method,
+      headers: authHeaders(),
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      closeBookModal();
+      await loadAdminBooks();
+      alert(id ? 'Cập nhật sách thành công!' : 'Thêm sách mới thành công!');
+    } else {
+      const err = await res.json();
+      errBox.textContent = err.message || 'Lỗi xử lý yêu cầu';
+      errBox.classList.remove('hidden');
+    }
+  } catch (e) {
+    errBox.textContent = 'Lỗi kết nối máy chủ';
+    errBox.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteBook(id, title) {
+  if (!confirm(`Bạn có chắc chắn muốn xóa cuốn sách "${title}" (ID: #${id})?`)) return;
+  try {
+    const res = await fetch(`${API}/api/admin/books/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok || res.status === 204) {
+      alert('Đã xóa sách thành công!');
+      loadAdminBooks();
+    } else {
+      const err = await res.json();
+      alert(err.message || 'Không thể xóa cuốn sách này');
+    }
+  } catch (e) {
+    alert('Lỗi khi gửi yêu cầu xóa');
+  }
+}
+
+// === 2. QUẢN LÝ ĐƠN HÀNG ===
+let allOrders = [];
+
+async function loadAdminOrders() {
+  try {
+    const res = await fetch(API + '/api/admin/orders', {
+      headers: authHeaders()
+    });
+    if (!res.ok) throw new Error('API error');
+    allOrders = await res.json();
+    updateOrdersStats();
+    renderOrdersTable(allOrders);
+  } catch (err) {
+    document.getElementById('ordersTableBody').innerHTML = `
+      <tr><td colspan="7" class="py-8 text-center text-error">Lỗi khi tải danh sách đơn hàng.</td></tr>
+    `;
+  }
+}
+
+function updateOrdersStats() {
+  document.getElementById('statTotalOrders').textContent = allOrders.length;
+  document.getElementById('ordersBadgeCount').textContent = allOrders.length;
+  const pending = allOrders.filter(o => o.status === 'PENDING').length;
+  const shipped = allOrders.filter(o => o.status === 'SHIPPED').length;
+  const revenue = allOrders.filter(o => o.status !== 'CANCELLED').reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+  document.getElementById('statPendingOrders').textContent = pending;
+  document.getElementById('statShippedOrders').textContent = shipped;
+  document.getElementById('statTotalRevenue').textContent = formatVND(revenue);
+}
+
+function renderOrdersTable(orders) {
+  const tbody = document.getElementById('ordersTableBody');
+  if (orders.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-outline">Chưa có đơn hàng nào.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = orders.map(o => {
+    const st = STATUS_MAP[o.status] || { label: o.status, cls: 'bg-surface-container text-on-surface' };
+    return `
+      <tr class="hover:bg-surface-container/30 transition">
+        <td class="py-3 px-4 font-mono font-semibold text-outline text-xs">#${o.id}</td>
+        <td class="py-3 px-4 font-semibold text-on-surface">${o.username || 'Khách hàng'}</td>
+        <td class="py-3 px-4 text-outline text-xs">${formatDate(o.createdAt)}</td>
+        <td class="py-3 px-4 text-on-surface-variant max-w-[200px] truncate" title="${o.shippingAddress}">${o.shippingAddress}</td>
+        <td class="py-3 px-4 font-bold text-primary">${formatVND(o.totalAmount)}</td>
+        <td class="py-3 px-4">
+          <select onchange="changeOrderStatus(${o.id}, this.value)" class="field py-1 px-2.5 text-xs font-semibold rounded-full cursor-pointer ${st.cls}">
+            <option value="PENDING" ${o.status === 'PENDING' ? 'selected' : ''}>Chờ xác nhận</option>
+            <option value="CONFIRMED" ${o.status === 'CONFIRMED' ? 'selected' : ''}>Đã xác nhận</option>
+            <option value="SHIPPED" ${o.status === 'SHIPPED' ? 'selected' : ''}>Đang giao hàng</option>
+            <option value="DELIVERED" ${o.status === 'DELIVERED' ? 'selected' : ''}>Đã giao</option>
+            <option value="CANCELLED" ${o.status === 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
+          </select>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <button onclick="viewOrderDetail(${o.id})" class="btn-outline py-1 px-2.5 text-xs">
+            <span class="material-symbols-outlined text-[16px]">visibility</span>
+            <span>Chi tiết</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterOrders() {
+  const val = document.getElementById('statusFilter').value;
+  if (val === 'ALL') {
+    renderOrdersTable(allOrders);
+  } else {
+    renderOrdersTable(allOrders.filter(o => o.status === val));
+  }
+}
+
+async function changeOrderStatus(orderId, newStatus) {
+  try {
+    const res = await fetch(`${API}/api/admin/orders/${orderId}/status?status=${newStatus}`, {
+      method: 'PATCH',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminOrders();
+    } else {
+      const err = await res.json();
+      alert(err.message || 'Không thể đổi trạng thái đơn hàng');
+      loadAdminOrders();
+    }
+  } catch (e) {
+    alert('Lỗi kết nối khi cập nhật đơn hàng');
+    loadAdminOrders();
+  }
+}
+
+function viewOrderDetail(orderId) {
+  const order = allOrders.find(o => o.id === orderId);
+  if (!order) return;
+
+  const st = STATUS_MAP[order.status] || { label: order.status, cls: '' };
+  document.getElementById('orderModalTitle').textContent = `Đơn hàng #${order.id}`;
+  document.getElementById('orderModalSubtitle').textContent = `Đặt lúc: ${formatDate(order.createdAt)} | Khách hàng: ${order.username}`;
+
+  const itemsHtml = (order.items || []).map(it => `
+    <div class="flex items-center justify-between py-2 border-b border-outline-variant/15 text-body-sm">
+      <div class="flex-1">
+        <p class="font-semibold text-on-surface">${it.bookTitle}</p>
+        <p class="text-xs text-outline">${formatVND(it.price)} x ${it.quantity}</p>
+      </div>
+      <p class="font-bold text-on-surface">${formatVND(it.subtotal)}</p>
+    </div>
+  `).join('');
+
+  document.getElementById('orderModalContent').innerHTML = `
+    <div class="bg-surface-container rounded-xl p-3.5 space-y-2 text-body-sm">
+      <div class="flex justify-between">
+        <span class="text-outline">Trạng thái:</span>
+        <span class="badge ${st.cls}">${st.label}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-outline">Địa chỉ nhận hàng:</span>
+        <span class="font-medium text-right max-w-[220px]">${order.shippingAddress}</span>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="text-label-md font-semibold text-outline mb-2">Các món đã đặt (${(order.items || []).length}):</h4>
+      <div class="divide-y divide-outline-variant/15 bg-surface-container-low rounded-xl px-3">
+        ${itemsHtml}
+      </div>
+    </div>
+
+    <div class="pt-3 border-t border-outline-variant/20 flex justify-between items-center">
+      <span class="text-title-md font-bold">Tổng thanh toán:</span>
+      <span class="text-headline-sm font-bold text-primary">${formatVND(order.totalAmount)}</span>
+    </div>
+  `;
+
+  document.getElementById('orderDetailModal').classList.remove('hidden');
+}
+
+function closeOrderDetailModal() {
+  document.getElementById('orderDetailModal').classList.add('hidden');
+}
+
+// Khởi chạy
+loadAdminBooks();
+</script>
+</body>
+</html>

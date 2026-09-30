@@ -65,6 +65,15 @@ public class SecurityConfig {
                 ).permitAll()
 
                 // =========================
+                // PUBLIC BOOK BROWSING
+                // =========================
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/books",
+                    "/api/books/**"
+                ).permitAll()
+
+                // =========================
                 // SWAGGER
                 // =========================
                 .requestMatchers(
@@ -123,7 +132,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(
-            List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
         );
         configuration.setAllowedHeaders(List.of("*"));
 

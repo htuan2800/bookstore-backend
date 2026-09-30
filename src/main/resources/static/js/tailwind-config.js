@@ -6,7 +6,8 @@ tailwind.config = {
       "surface-container-lowest": "#ffffff", "surface-container-low": "#f6f3ed",
       "surface-container": "#f0eee8", "surface-container-high": "#ebe8e2", "surface-variant": "#e5e2dc",
       error: "#ba1a1a", "error-container": "#ffdad6", "on-error-container": "#93000a",
-      tertiary: "#805200", "tertiary-fixed-dim": "#fcba5f", "secondary-fixed": "#d9e3f6", "on-secondary-fixed": "#121c2a"
+      tertiary: "#805200", "tertiary-fixed-dim": "#fcba5f", "secondary-fixed": "#d9e3f6", "on-secondary-fixed": "#121c2a",
+      "outline-variant": "#d8c2ba"
     },
     spacing: { "margin-mobile": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "space-lg": "1.5rem" },
     fontFamily: { headline: ["Merriweather", "serif"], body: ["Plus Jakarta Sans", "sans-serif"] },

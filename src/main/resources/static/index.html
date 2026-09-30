@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>BookNest - Tiệm Sách Trực Tuyến</title>
+<meta name="description" content="BookNest - Khám phá và mua sách trực tuyến với hàng ngàn đầu sách chất lượng."/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<style type="text/tailwindcss">
+  .card { @apply bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition hover:shadow-md hover:-translate-y-1 cursor-pointer; }
+  .badge { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm font-semibold; }
+  .nav-btn { @apply flex flex-col items-center gap-0.5 text-outline text-label-sm transition; }
+  .nav-btn.active { @apply text-primary; }
+</style>
+<style>
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-up { animation: fadeUp 0.4s ease-out both; }
+  .fade-up:nth-child(2) { animation-delay: 0.05s; }
+  .fade-up:nth-child(3) { animation-delay: 0.1s; }
+  .fade-up:nth-child(4) { animation-delay: 0.15s; }
+  .skeleton { background: linear-gradient(90deg, #f0eee8 25%, #e5e2dc 50%, #f0eee8 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.5rem; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body text-body-md min-h-screen pb-20">
+
+<!-- HEADER -->
+<header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+  <div class="h-14 max-w-lg mx-auto px-margin-mobile flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings:'FILL' 1">menu_book</span>
+      <div>
+        <span class="text-label-sm tracking-wider uppercase text-outline">BookNest</span>
+        <h1 class="font-headline text-title-md leading-tight">Tiệm Sách</h1>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="greeting" class="text-body-sm text-on-surface-variant mr-1"></span>
+      <a id="adminLink" href="admin.html" class="hidden px-2.5 py-1.5 rounded-lg bg-amber-700 text-white text-label-sm font-semibold hover:bg-amber-800 transition flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span><span>Admin</span>
+      </a>
+      <a id="loginLink" href="login.html" class="px-3 py-1.5 rounded-lg bg-primary text-on-primary text-label-sm font-semibold hover:bg-primary-container transition">Đăng nhập</a>
+      <button id="logoutBtn" class="hidden w-9 h-9 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition" title="Đăng xuất">
+        <span class="material-symbols-outlined text-[20px] text-outline">logout</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO BANNER -->
+<section class="pt-16 px-margin-mobile max-w-lg mx-auto">
+  <div class="mt-4 rounded-2xl bg-gradient-to-br from-primary/10 via-surface-container-low to-tertiary/5 p-5 relative overflow-hidden">
+    <div class="absolute top-2 right-2 opacity-10">
+      <span class="material-symbols-outlined text-[80px] text-primary" style="font-variation-settings:'FILL' 1">auto_stories</span>
+    </div>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 mb-3">
+      <span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+      <span class="text-label-sm text-primary font-bold tracking-wide uppercase">Mới cập nhật</span>
+    </div>
+    <h2 class="font-headline text-headline-lg tracking-tight mb-1">Khám phá kho sách</h2>
+    <p class="text-body-md text-on-surface-variant max-w-[260px]">Tìm cuốn sách tiếp theo nuôi dưỡng tâm hồn bạn</p>
+  </div>
+</section>
+
+<!-- BOOK LIST -->
+<section class="px-margin-mobile max-w-lg mx-auto mt-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-headline text-headline-sm">Tất cả sách</h2>
+    <span id="bookCount" class="badge bg-surface-container text-on-surface-variant">
+      <span class="material-symbols-outlined text-[14px]">library_books</span>
+      <span>--</span>
+    </span>
+  </div>
+
+  <!-- Skeleton loading -->
+  <div id="skeleton" class="space-y-4">
+    <div class="flex gap-3 p-3 bg-surface-container-lowest rounded-xl"><div class="skeleton w-24 h-32 flex-shrink-0"></div><div class="flex-1 space-y-2 py-1"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-1/2"></div><div class="skeleton h-3 w-full"></div><div class="skeleton h-5 w-20 mt-3"></div></div></div>
+    <div class="flex gap-3 p-3 bg-surface-container-lowest rounded-xl"><div class="skeleton w-24 h-32 flex-shrink-0"></div><div class="flex-1 space-y-2 py-1"><div class="skeleton h-4 w-3/4"></div><div class="skeleton h-3 w-1/2"></div><div class="skeleton h-3 w-full"></div><div class="skeleton h-5 w-20 mt-3"></div></div></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="emptyState" class="hidden text-center py-12">
+    <span class="material-symbols-outlined text-[64px] text-outline/30" style="font-variation-settings:'FILL' 1">shelves</span>
+    <p class="text-on-surface-variant mt-2">Chưa có sách nào trong cửa hàng</p>
+  </div>
+
+  <!-- Error state -->
+  <div id="errorState" class="hidden text-center py-12">
+    <span class="material-symbols-outlined text-[64px] text-error/40">cloud_off</span>
+    <p class="text-on-surface-variant mt-2">Không thể tải dữ liệu sách</p>
+    <button onclick="loadBooks()" class="mt-3 px-4 py-2 bg-primary text-on-primary rounded-lg text-label-lg hover:bg-primary-container transition">Thử lại</button>
+  </div>
+
+  <!-- Book cards container -->
+  <div id="bookList" class="hidden space-y-3"></div>
+</section>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 inset-x-0 z-50 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.06)]">
+  <div class="max-w-lg mx-auto h-16 flex items-center justify-around px-2">
+    <a href="index.html" class="nav-btn active">
+      <span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">home</span>
+      <span>Trang chủ</span>
+    </a>
+    <a href="#" class="nav-btn">
+      <span class="material-symbols-outlined text-[24px]">search</span>
+      <span>Tìm kiếm</span>
+    </a>
+    <a href="cart.html" class="nav-btn">
+      <span class="material-symbols-outlined text-[24px]">shopping_cart</span>
+      <span>Giỏ hàng</span>
+    </a>
+    <a href="orders.html" class="nav-btn">
+      <span class="material-symbols-outlined text-[24px]">receipt_long</span>
+      <span>Đơn hàng</span>
+    </a>
+  </div>
+</nav>
+
+<!-- BOOK DETAIL MODAL -->
+<div id="bookModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="modalOverlay"></div>
+  <div class="absolute bottom-0 inset-x-0 max-w-lg mx-auto bg-surface-container-lowest rounded-t-3xl shadow-2xl transform transition-transform duration-300 translate-y-full" id="modalContent">
+    <div class="w-10 h-1 bg-outline/30 rounded-full mx-auto mt-3"></div>
+    <div class="p-5 pb-8 max-h-[80vh] overflow-y-auto" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const $ = (id) => document.getElementById(id);
+
+// Auth check
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+const fullName = localStorage.getItem('fullName') || sessionStorage.getItem('fullName');
+const role = localStorage.getItem('role') || sessionStorage.getItem('role');
+
+if (fullName) {
+  if ($('greeting')) $('greeting').textContent = `Xin chào, ${fullName}`;
+  if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
+  if ($('loginLink')) $('loginLink').classList.add('hidden');
+  if (role === 'ROLE_ADMIN' && $('adminLink')) $('adminLink').classList.remove('hidden');
+} else {
+  if ($('loginLink')) $('loginLink').classList.remove('hidden');
+}
+
+if ($('logoutBtn')) {
+  $('logoutBtn').addEventListener('click', () => {
+    localStorage.clear(); sessionStorage.clear();
+    location.href = 'login.html';
+  });
+}
+
+// Format VND
+function formatVND(n) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+}
+
+// Book cover colors based on category
+const COVER_COLORS = [
+  'from-amber-700/80 to-amber-900/90',
+  'from-emerald-700/80 to-emerald-900/90',
+  'from-indigo-700/80 to-indigo-900/90',
+  'from-rose-700/80 to-rose-900/90',
+  'from-violet-700/80 to-violet-900/90',
+];
+
+function bookCover(book) {
+  const colorIdx = (book.id || 0) % COVER_COLORS.length;
+  const icon = book.category?.name?.includes('Viễn tưởng') ? 'auto_fix_high' : 'menu_book';
+  return `
+    <div class="w-24 h-32 flex-shrink-0 rounded-lg bg-gradient-to-br ${COVER_COLORS[colorIdx]} flex items-center justify-center shadow-inner relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==')]"></div>
+      <span class="material-symbols-outlined text-white/90 text-[36px]" style="font-variation-settings:'FILL' 1">${icon}</span>
+    </div>`;
+}
+
+function bookCard(book) {
+  const author = book.author?.name || 'Không rõ';
+  const category = book.category?.name || '';
+  const inStock = book.stockQuantity > 0;
+  return `
+    <div class="card fade-up flex gap-3 p-3" onclick="showBookDetail(${book.id})">
+      ${bookCover(book)}
+      <div class="flex-1 min-w-0 flex flex-col">
+        <h3 class="text-title-md font-semibold truncate">${book.title}</h3>
+        <p class="text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+          <span class="material-symbols-outlined text-[14px]">person</span>${author}
+        </p>
+        ${category ? `<span class="badge bg-surface-container text-on-surface-variant mt-1.5 self-start"><span class="material-symbols-outlined text-[12px]">category</span>${category}</span>` : ''}
+        <div class="mt-auto pt-2 flex items-center justify-between">
+          <span class="text-title-md text-primary font-bold">${formatVND(book.price)}</span>
+          <span class="badge ${inStock ? 'bg-emerald-50 text-emerald-700' : 'bg-error-container text-on-error-container'}">
+            <span class="material-symbols-outlined text-[12px]">${inStock ? 'check_circle' : 'cancel'}</span>
+            ${inStock ? `Còn ${book.stockQuantity}` : 'Hết hàng'}
+          </span>
+        </div>
+      </div>
+    </div>`;
+}
+
+let booksData = [];
+
+async function loadBooks() {
+  $('skeleton').classList.remove('hidden');
+  $('bookList').classList.add('hidden');
+  $('emptyState').classList.add('hidden');
+  $('errorState').classList.add('hidden');
+
+  try {
+    const res = await fetch(API + '/api/books');
+    if (!res.ok) throw new Error('API error');
+    booksData = await res.json();
+
+    $('skeleton').classList.add('hidden');
+    $('bookCount').querySelector('span:last-child').textContent = booksData.length + ' cuốn';
+
+    if (booksData.length === 0) {
+      $('emptyState').classList.remove('hidden');
+      return;
+    }
+
+    $('bookList').innerHTML = booksData.map(bookCard).join('');
+    $('bookList').classList.remove('hidden');
+  } catch (err) {
+    console.error(err);
+    $('skeleton').classList.add('hidden');
+    $('errorState').classList.remove('hidden');
+  }
+}
+
+// Book detail modal
+function showBookDetail(id) {
+  const book = booksData.find(b => b.id === id);
+  if (!book) return;
+
+  const author = book.author?.name || 'Không rõ';
+  const authorBio = book.author?.bio || '';
+  const category = book.category?.name || 'Chưa phân loại';
+  const inStock = book.stockQuantity > 0;
+  const colorIdx = (book.id || 0) % COVER_COLORS.length;
+  const icon = book.category?.name?.includes('Viễn tưởng') ? 'auto_fix_high' : 'menu_book';
+
+  $('modalBody').innerHTML = `
+    <div class="flex flex-col items-center text-center mb-5">
+      <div class="w-36 h-48 rounded-xl bg-gradient-to-br ${COVER_COLORS[colorIdx]} flex items-center justify-center shadow-lg relative overflow-hidden mb-4">
+        <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==')]"></div>
+        <span class="material-symbols-outlined text-white/90 text-[56px]" style="font-variation-settings:'FILL' 1">${icon}</span>
+      </div>
+      <h2 class="font-headline text-headline-lg">${book.title}</h2>
+      <p class="text-body-md text-on-surface-variant mt-1">bởi <strong>${author}</strong></p>
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 mb-5">
+      <div class="bg-surface-container rounded-xl p-3 text-center">
+        <span class="material-symbols-outlined text-primary text-[20px] mb-1" style="font-variation-settings:'FILL' 1">payments</span>
+        <p class="text-title-md text-primary font-bold">${formatVND(book.price)}</p>
+        <p class="text-label-sm text-outline">Giá bán</p>
+      </div>
+      <div class="bg-surface-container rounded-xl p-3 text-center">
+        <span class="material-symbols-outlined text-tertiary text-[20px] mb-1" style="font-variation-settings:'FILL' 1">inventory_2</span>
+        <p class="text-title-md font-bold">${book.stockQuantity}</p>
+        <p class="text-label-sm text-outline">Tồn kho</p>
+      </div>
+      <div class="bg-surface-container rounded-xl p-3 text-center">
+        <span class="material-symbols-outlined text-[20px] mb-1" style="font-variation-settings:'FILL' 1;color:#805200">category</span>
+        <p class="text-body-sm font-semibold">${category}</p>
+        <p class="text-label-sm text-outline">Thể loại</p>
+      </div>
+    </div>
+
+    ${book.description ? `
+    <div class="mb-5">
+      <h3 class="text-label-lg text-on-surface-variant mb-2 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px]">description</span>Giới thiệu
+      </h3>
+      <p class="text-body-md text-on-surface leading-relaxed">${book.description}</p>
+    </div>` : ''}
+
+    ${authorBio ? `
+    <div class="mb-5 bg-surface-container rounded-xl p-4">
+      <h3 class="text-label-lg text-on-surface-variant mb-1.5 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px]">person</span>Về tác giả
+      </h3>
+      <p class="text-body-sm text-on-surface">${authorBio}</p>
+    </div>` : ''}
+
+    <button id="addCartBtn" class="w-full py-3.5 rounded-xl text-label-lg font-semibold flex items-center justify-center gap-2 transition active:scale-[0.98] ${inStock ? 'bg-primary text-on-primary hover:bg-primary-container shadow-md' : 'bg-surface-container text-outline cursor-not-allowed'}" ${!inStock ? 'disabled' : ''} ${inStock && token ? `onclick="addToCart(${book.id})"` : !token ? `onclick="location.href='login.html'"` : ''}>
+      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">${inStock ? 'add_shopping_cart' : 'remove_shopping_cart'}</span>
+      <span>${inStock ? (token ? 'Thêm vào giỏ hàng' : 'Đăng nhập để mua') : 'Hết hàng'}</span>
+    </button>
+  `;
+
+  const modal = $('bookModal');
+  const content = $('modalContent');
+  modal.classList.remove('hidden');
+  requestAnimationFrame(() => {
+    content.classList.remove('translate-y-full');
+    content.classList.add('translate-y-0');
+  });
+}
+
+function closeModal() {
+  const content = $('modalContent');
+  content.classList.remove('translate-y-0');
+  content.classList.add('translate-y-full');
+  setTimeout(() => $('bookModal').classList.add('hidden'), 300);
+}
+
+$('modalOverlay').addEventListener('click', closeModal);
+
+// Add to cart
+async function addToCart(bookId) {
+  if (!token) { location.href = 'login.html'; return; }
+  const btn = document.getElementById('addCartBtn');
+  btn.disabled = true;
+  btn.querySelector('span:last-child').textContent = 'Đang thêm...';
+  try {
+    const res = await fetch(API + '/api/cart', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookId: bookId, quantity: 1 })
+    });
+    if (res.ok) {
+      btn.querySelector('span:last-child').textContent = '✓ Đã thêm!';
+      btn.classList.remove('bg-primary');
+      btn.classList.add('bg-emerald-600');
+      setTimeout(() => {
+        btn.querySelector('span:last-child').textContent = 'Thêm vào giỏ hàng';
+        btn.classList.remove('bg-emerald-600');
+        btn.classList.add('bg-primary');
+        btn.disabled = false;
+      }, 1500);
+    } else {
+      const d = await res.json();
+      alert(d.message || 'Không thể thêm vào giỏ');
+      btn.disabled = false;
+      btn.querySelector('span:last-child').textContent = 'Thêm vào giỏ hàng';
+    }
+  } catch (e) {
+    alert('Lỗi kết nối');
+    btn.disabled = false;
+    btn.querySelector('span:last-child').textContent = 'Thêm vào giỏ hàng';
+  }
+}
+
+// Init
+loadBooks();
+</script>
+</body>
+</html>

@@ -1,5 +1,8 @@
+SET NAMES 'utf8mb4';
+SET CHARACTER SET utf8mb4;
+
 -- Tạo Database nếu chưa tồn tại
-CREATE DATABASE IF NOT EXISTS bookstore;
+CREATE DATABASE IF NOT EXISTS bookstore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE bookstore;
 
 -- 1. Bảng Người dùng
@@ -93,8 +96,8 @@ CREATE TABLE IF NOT EXISTS order_items (
 
 -- Nạp Tài khoản (Mật khẩu băm BCrypt đại diện cho "123456")
 INSERT INTO users (username, password, email, full_name, role) VALUES
-('admin', '$2a$10$e8R6.yGfS7XJ7E4oK0R1u.S4V2WzO9yL2N3P4Q5R6S7T8U9V0W1X2', 'admin@bookstore.com', 'Quản Trị Viên', 'ROLE_ADMIN'),
-('customer1', '$2a$10$e8R6.yGfS7XJ7E4oK0R1u.S4V2WzO9yL2N3P4Q5R6S7T8U9V0W1X2', 'user1@gmail.com', 'Nguyễn Văn A', 'ROLE_CUSTOMER');
+('admin', '$2a$10$Xgs.5AuzqT.psQzd0kzmI.MZwolfvEPAmlhHp3a3d5N7dHO42QGW.', 'admin@bookstore.com', 'Quản Trị Viên', 'ROLE_ADMIN'),
+('customer1', '$2a$10$Xgs.5AuzqT.psQzd0kzmI.MZwolfvEPAmlhHp3a3d5N7dHO42QGW.', 'user1@gmail.com', 'Nguyễn Văn A', 'ROLE_CUSTOMER');
 
 -- Nạp Tác giả
 INSERT INTO authors (name, bio) VALUES

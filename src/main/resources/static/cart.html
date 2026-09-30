@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Giỏ hàng - BookNest</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<style type="text/tailwindcss">
+  .nav-btn { @apply flex flex-col items-center gap-0.5 text-outline text-label-sm transition; }
+  .nav-btn.active { @apply text-primary; }
+</style>
+<style>
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp .3s ease-out both; }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body text-body-md min-h-screen pb-20">
+
+<!-- HEADER -->
+<header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+  <div class="h-14 max-w-lg mx-auto px-4 flex items-center gap-3">
+    <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center hover:text-primary">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <div>
+      <span class="text-label-sm tracking-wider uppercase text-outline">BookNest</span>
+      <h1 class="font-headline text-headline-sm">Giỏ hàng</h1>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-lg mx-auto pt-20 pb-8 px-4">
+  <!-- Loading -->
+  <div id="loading" class="text-center py-16">
+    <span class="material-symbols-outlined text-[40px] text-outline animate-spin">progress_activity</span>
+    <p class="text-on-surface-variant mt-2">Đang tải giỏ hàng...</p>
+  </div>
+
+  <!-- Empty -->
+  <div id="emptyState" class="hidden text-center py-16">
+    <span class="material-symbols-outlined text-[72px] text-outline/30" style="font-variation-settings:'FILL' 1">shopping_cart</span>
+    <h2 class="font-headline text-headline-sm mt-3">Giỏ hàng trống</h2>
+    <p class="text-on-surface-variant mt-1 mb-4">Hãy thêm sách vào giỏ để bắt đầu mua sắm</p>
+    <a href="index.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg text-label-lg hover:bg-primary-container transition">
+      <span class="material-symbols-outlined text-[18px]">storefront</span>Khám phá sách
+    </a>
+  </div>
+
+  <!-- Cart items -->
+  <div id="cartContent" class="hidden">
+    <div id="cartList" class="space-y-3"></div>
+
+    <!-- Summary -->
+    <div class="mt-6 bg-surface-container-lowest rounded-xl p-4 shadow-sm">
+      <div class="flex justify-between text-body-md text-on-surface-variant mb-2">
+        <span>Tạm tính (<span id="itemCount">0</span> sản phẩm)</span>
+        <span id="subtotalText" class="font-semibold text-on-surface">0₫</span>
+      </div>
+      <div class="flex justify-between text-body-md text-on-surface-variant mb-3">
+        <span>Phí vận chuyển</span>
+        <span class="text-primary font-semibold">Miễn phí</span>
+      </div>
+      <hr class="border-surface-variant mb-3"/>
+      <div class="flex justify-between text-title-md font-bold">
+        <span>Tổng cộng</span>
+        <span id="totalText" class="text-primary">0₫</span>
+      </div>
+    </div>
+
+    <!-- Shipping address -->
+    <div class="mt-4 bg-surface-container-lowest rounded-xl p-4 shadow-sm">
+      <label class="block text-label-lg font-semibold mb-2">
+        <span class="material-symbols-outlined text-[16px] align-text-bottom mr-1">location_on</span>Địa chỉ giao hàng
+      </label>
+      <textarea id="shippingAddress" rows="2" placeholder="Nhập địa chỉ giao hàng..."
+        class="w-full px-3 py-2.5 bg-surface-container-low rounded-lg text-body-md outline-none focus:ring-2 focus:ring-primary transition resize-none placeholder:text-outline/60"></textarea>
+    </div>
+
+    <!-- Order button -->
+    <button id="orderBtn" onclick="placeOrder()"
+      class="mt-4 w-full py-3.5 bg-primary text-on-primary rounded-xl text-label-lg font-semibold flex items-center justify-center gap-2 hover:bg-primary-container active:scale-[0.98] transition shadow-md disabled:opacity-60">
+      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">shopping_cart_checkout</span>
+      <span>Đặt hàng</span>
+    </button>
+  </div>
+
+  <!-- Error -->
+  <p id="errorMsg" class="hidden mt-3 text-body-sm bg-error-container text-on-error-container rounded-lg px-3 py-2"></p>
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 inset-x-0 z-50 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.06)]">
+  <div class="max-w-lg mx-auto h-16 flex items-center justify-around px-2">
+    <a href="index.html" class="nav-btn"><span class="material-symbols-outlined text-[24px]">home</span><span>Trang chủ</span></a>
+    <a href="#" class="nav-btn"><span class="material-symbols-outlined text-[24px]">search</span><span>Tìm kiếm</span></a>
+    <a href="cart.html" class="nav-btn active"><span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">shopping_cart</span><span>Giỏ hàng</span></a>
+    <a href="orders.html" class="nav-btn"><span class="material-symbols-outlined text-[24px]">receipt_long</span><span>Đơn hàng</span></a>
+  </div>
+</nav>
+
+<!-- ORDER SUCCESS MODAL -->
+<div id="successModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-6">
+    <div class="bg-surface-container-lowest rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center">
+      <div class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-emerald-600 text-[36px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+      </div>
+      <h2 class="font-headline text-headline-lg mb-1">Đặt hàng thành công!</h2>
+      <p class="text-body-md text-on-surface-variant mb-5">Đơn hàng của bạn đang được xử lý</p>
+      <div class="flex gap-3">
+        <a href="orders.html" class="flex-1 py-2.5 bg-primary text-on-primary rounded-lg text-label-lg hover:bg-primary-container transition text-center">Xem đơn hàng</a>
+        <a href="index.html" class="flex-1 py-2.5 bg-surface-container text-on-surface rounded-lg text-label-lg hover:bg-surface-container-high transition text-center">Tiếp tục mua</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+if (!token) location.href = 'login.html';
+
+function authHeaders() {
+  return { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+}
+
+function formatVND(n) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+}
+
+const $ = (id) => document.getElementById(id);
+
+let cartData = [];
+
+function renderCart() {
+  if (cartData.length === 0) {
+    $('cartContent').classList.add('hidden');
+    $('emptyState').classList.remove('hidden');
+    return;
+  }
+  $('emptyState').classList.add('hidden');
+  $('cartContent').classList.remove('hidden');
+
+  let total = 0;
+  $('cartList').innerHTML = cartData.map((item, i) => {
+    total += item.subtotal;
+    return `
+    <div class="bg-surface-container-lowest rounded-xl p-3 shadow-sm fade-up flex gap-3" style="animation-delay:${i*0.05}s">
+      <div class="w-16 h-20 rounded-lg bg-gradient-to-br from-amber-700/80 to-amber-900/90 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-white/90 text-[28px]" style="font-variation-settings:'FILL' 1">menu_book</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h3 class="text-title-md font-semibold truncate">${item.bookTitle}</h3>
+        ${item.authorName ? `<p class="text-body-sm text-on-surface-variant">${item.authorName}</p>` : ''}
+        <p class="text-label-lg text-primary font-bold mt-1">${formatVND(item.bookPrice)}</p>
+        <div class="flex items-center justify-between mt-2">
+          <div class="flex items-center gap-1 bg-surface-container rounded-full">
+            <button onclick="updateQty(${item.id}, ${item.quantity - 1})" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high transition ${item.quantity <= 1 ? 'opacity-40' : ''}">
+              <span class="material-symbols-outlined text-[18px]">remove</span>
+            </button>
+            <span class="w-8 text-center text-label-lg font-semibold">${item.quantity}</span>
+            <button onclick="updateQty(${item.id}, ${item.quantity + 1})" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high transition ${item.quantity >= item.stockQuantity ? 'opacity-40' : ''}">
+              <span class="material-symbols-outlined text-[18px]">add</span>
+            </button>
+          </div>
+          <button onclick="removeItem(${item.id})" class="w-8 h-8 rounded-full flex items-center justify-center text-error/70 hover:text-error hover:bg-error-container transition">
+            <span class="material-symbols-outlined text-[20px]">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  $('itemCount').textContent = cartData.length;
+  $('subtotalText').textContent = formatVND(total);
+  $('totalText').textContent = formatVND(total);
+}
+
+async function loadCart() {
+  try {
+    const res = await fetch(API + '/api/cart', { headers: authHeaders() });
+    if (res.status === 401 || res.status === 403) { location.href = 'login.html'; return; }
+    cartData = await res.json();
+    $('loading').classList.add('hidden');
+    renderCart();
+  } catch (e) {
+    $('loading').innerHTML = '<p class="text-on-surface-variant">Không thể tải giỏ hàng</p>';
+  }
+}
+
+async function updateQty(itemId, qty) {
+  if (qty < 1) return;
+  hideError();
+  try {
+    const res = await fetch(API + '/api/cart/' + itemId + '?quantity=' + qty, {
+      method: 'PUT', headers: authHeaders()
+    });
+    if (!res.ok) { const d = await res.json(); showError(d.message); return; }
+    loadCart();
+  } catch (e) { showError('Lỗi kết nối'); }
+}
+
+async function removeItem(itemId) {
+  try {
+    await fetch(API + '/api/cart/' + itemId, { method: 'DELETE', headers: authHeaders() });
+    loadCart();
+  } catch (e) { showError('Lỗi kết nối'); }
+}
+
+async function placeOrder() {
+  hideError();
+  const address = $('shippingAddress').value.trim();
+  if (!address) { showError('Vui lòng nhập địa chỉ giao hàng'); return; }
+
+  const btn = $('orderBtn');
+  btn.disabled = true;
+  btn.querySelector('span:last-child').textContent = 'Đang xử lý...';
+
+  try {
+    const res = await fetch(API + '/api/orders', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ shippingAddress: address })
+    });
+    if (!res.ok) { const d = await res.json(); showError(d.message); return; }
+    $('successModal').classList.remove('hidden');
+  } catch (e) { showError('Không thể đặt hàng. Thử lại sau.'); }
+  finally {
+    btn.disabled = false;
+    btn.querySelector('span:last-child').textContent = 'Đặt hàng';
+  }
+}
+
+function showError(msg) { const e = $('errorMsg'); e.textContent = msg; e.classList.remove('hidden'); }
+function hideError() { $('errorMsg').classList.add('hidden'); }
+
+loadCart();
+</script>
+</body>
+</html>

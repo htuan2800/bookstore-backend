@@ -20,6 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         com.bookstore.bookstore_backend.entity.User u = userRepository
             .findByUsernameOrEmail(identifier, identifier)
             .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản"));
+        if (u.isDeleted()) {
+            throw new org.springframework.security.authentication.DisabledException("Tài khoản này đã bị khóa hoặc ngừng hoạt động");
+        }
         return new org.springframework.security.core.userdetails.User(
             u.getUsername(), u.getPassword(),
             List.of(new SimpleGrantedAuthority(u.getRole())));

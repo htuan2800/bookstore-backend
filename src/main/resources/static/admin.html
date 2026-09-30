@@ -97,6 +97,7 @@
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
+    white-space: nowrap;
   }
   .tab-btn:hover {
     color: #9f3c16;
@@ -110,7 +111,7 @@
 <body class="bg-surface text-on-surface font-body text-body-md min-h-screen">
 
 <!-- HEADER -->
-<header class="fixed top-0 inset-x-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30">
+<header class="fixed top-0 inset-x-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-stone-200">
   <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
@@ -121,7 +122,7 @@
           <span class="font-headline text-title-md font-bold">BookNest</span>
           <span class="badge bg-primary/15 text-primary text-[11px] uppercase tracking-wider">Admin Portal</span>
         </div>
-        <p class="text-label-sm text-outline hidden sm:block">Quản lý kho sách & theo dõi đơn hàng</p>
+        <p class="text-label-sm text-outline hidden sm:block">Trung tâm điều hành Quản trị viên</p>
       </div>
     </div>
 
@@ -130,7 +131,7 @@
         <span class="material-symbols-outlined text-[18px]">storefront</span>
         <span class="hidden sm:inline">Xem Tiệm Sách</span>
       </a>
-      <div class="h-6 w-px bg-outline-variant/50 hidden sm:block"></div>
+      <div class="h-6 w-px bg-stone-200 hidden sm:block"></div>
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-outline">account_circle</span>
         <span id="adminName" class="text-label-md font-semibold">Admin</span>
@@ -146,7 +147,7 @@
 <main class="max-w-6xl mx-auto pt-24 pb-12 px-4">
 
   <!-- TABS NAVIGATION -->
-  <div class="flex items-center border-b border-outline-variant/30 mb-6 gap-2">
+  <div class="flex items-center border-b border-stone-200 mb-6 gap-1 overflow-x-auto">
     <button id="tabBooksBtn" class="tab-btn active" onclick="switchTab('books')">
       <span class="material-symbols-outlined text-[20px]">menu_book</span>
       <span>Quản lý Sách</span>
@@ -157,13 +158,27 @@
       <span>Quản lý Đơn hàng</span>
       <span id="ordersBadgeCount" class="badge bg-surface-container text-on-surface-variant text-[11px]">0</span>
     </button>
+    <button id="tabCategoriesBtn" class="tab-btn" onclick="switchTab('categories')">
+      <span class="material-symbols-outlined text-[20px]">category</span>
+      <span>Thể loại</span>
+      <span id="categoriesBadgeCount" class="badge bg-surface-container text-on-surface-variant text-[11px]">0</span>
+    </button>
+    <button id="tabAuthorsBtn" class="tab-btn" onclick="switchTab('authors')">
+      <span class="material-symbols-outlined text-[20px]">person_edit</span>
+      <span>Tác giả</span>
+      <span id="authorsBadgeCount" class="badge bg-surface-container text-on-surface-variant text-[11px]">0</span>
+    </button>
+    <button id="tabUsersBtn" class="tab-btn" onclick="switchTab('users')">
+      <span class="material-symbols-outlined text-[20px]">group</span>
+      <span>Người dùng</span>
+      <span id="usersBadgeCount" class="badge bg-surface-container text-on-surface-variant text-[11px]">0</span>
+    </button>
   </div>
 
   <!-- TAB 1: QUẢN LÝ SÁCH -->
   <section id="tabBooksSection" class="space-y-6">
-    <!-- STATS ROW -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center gap-4">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex items-center gap-4">
         <div class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
           <span class="material-symbols-outlined text-[28px]">library_books</span>
         </div>
@@ -172,8 +187,8 @@
           <p id="statTotalBooks" class="text-headline-sm font-bold">--</p>
         </div>
       </div>
-      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center gap-4">
-        <div class="w-12 h-12 rounded-lg bg-secondary-fixed/50 text-on-secondary-fixed flex items-center justify-center">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center">
           <span class="material-symbols-outlined text-[28px]">inventory_2</span>
         </div>
         <div>
@@ -181,22 +196,21 @@
           <p id="statTotalStock" class="text-headline-sm font-bold">--</p>
         </div>
       </div>
-      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center gap-4">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex items-center gap-4">
         <div class="w-12 h-12 rounded-lg bg-error-container text-error flex items-center justify-center">
           <span class="material-symbols-outlined text-[28px]">warning</span>
         </div>
         <div>
-          <p class="text-label-sm text-outline">Sách sắp hết / Hết hàng</p>
+          <p class="text-label-sm text-outline">Sách hết hàng</p>
           <p id="statOutOfStock" class="text-headline-sm font-bold">--</p>
         </div>
       </div>
     </div>
 
-    <!-- ACTION BAR -->
-    <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="relative w-full sm:w-80">
         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
-        <input id="searchBookInput" type="text" placeholder="Tìm theo tên sách..." class="field pl-10 py-2 text-body-sm" oninput="filterBooks()"/>
+        <input id="searchBookInput" type="text" placeholder="Tìm theo tên sách hoặc tác giả..." class="field pl-10 py-2 text-body-sm" oninput="filterBooks()"/>
       </div>
       <button class="btn-primary w-full sm:w-auto" onclick="openAddBookModal()">
         <span class="material-symbols-outlined text-[20px]">add</span>
@@ -204,12 +218,11 @@
       </button>
     </div>
 
-    <!-- BOOKS TABLE -->
-    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden">
+    <div class="bg-surface-container-lowest rounded-xl border border-stone-200 shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-outline-variant/30">
+            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-stone-200">
               <th class="py-3 px-4">#ID</th>
               <th class="py-3 px-4">Tên sách</th>
               <th class="py-3 px-4">Tác giả</th>
@@ -219,10 +232,8 @@
               <th class="py-3 px-4 text-right">Thao tác</th>
             </tr>
           </thead>
-          <tbody id="booksTableBody" class="divide-y divide-outline-variant/20 text-body-sm">
-            <tr>
-              <td colspan="7" class="py-8 text-center text-outline">Đang tải dữ liệu sách...</td>
-            </tr>
+          <tbody id="booksTableBody" class="divide-y divide-stone-200 text-body-sm">
+            <tr><td colspan="7" class="py-8 text-center text-outline">Đang tải dữ liệu sách...</td></tr>
           </tbody>
         </table>
       </div>
@@ -231,28 +242,26 @@
 
   <!-- TAB 2: QUẢN LÝ ĐƠN HÀNG -->
   <section id="tabOrdersSection" class="hidden space-y-6">
-    <!-- STATS ROW ORDERS -->
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm">
         <p class="text-label-sm text-outline">Tổng số đơn</p>
         <p id="statTotalOrders" class="text-headline-sm font-bold mt-1">--</p>
       </div>
-      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm">
         <p class="text-label-sm text-amber-700">Chờ xác nhận</p>
         <p id="statPendingOrders" class="text-headline-sm font-bold text-amber-700 mt-1">--</p>
       </div>
-      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm">
         <p class="text-label-sm text-blue-700">Đang giao hàng</p>
         <p id="statShippedOrders" class="text-headline-sm font-bold text-blue-700 mt-1">--</p>
       </div>
-      <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm">
         <p class="text-label-sm text-emerald-700">Tổng doanh thu</p>
         <p id="statTotalRevenue" class="text-headline-sm font-bold text-emerald-700 mt-1">--</p>
       </div>
     </div>
 
-    <!-- FILTER BAR -->
-    <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/20 shadow-sm flex items-center justify-between gap-3">
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between gap-3">
       <div class="flex items-center gap-2">
         <span class="text-label-md font-semibold text-outline">Lọc trạng thái:</span>
         <select id="statusFilter" class="field py-1.5 px-3 text-body-sm w-auto cursor-pointer" onchange="filterOrders()">
@@ -270,12 +279,11 @@
       </button>
     </div>
 
-    <!-- ORDERS TABLE -->
-    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden">
+    <div class="bg-surface-container-lowest rounded-xl border border-stone-200 shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-outline-variant/30">
+            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-stone-200">
               <th class="py-3 px-4">#Đơn</th>
               <th class="py-3 px-4">Khách hàng</th>
               <th class="py-3 px-4">Ngày đặt</th>
@@ -285,10 +293,137 @@
               <th class="py-3 px-4 text-right">Chi tiết</th>
             </tr>
           </thead>
-          <tbody id="ordersTableBody" class="divide-y divide-outline-variant/20 text-body-sm">
-            <tr>
-              <td colspan="7" class="py-8 text-center text-outline">Đang tải danh sách đơn hàng...</td>
+          <tbody id="ordersTableBody" class="divide-y divide-stone-200 text-body-sm">
+            <tr><td colspan="7" class="py-8 text-center text-outline">Đang tải danh sách đơn hàng...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: QUẢN LÝ THỂ LOẠI (CATEGORIES) -->
+  <section id="tabCategoriesSection" class="hidden space-y-6">
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">category</span>
+        </div>
+        <div>
+          <h2 class="font-headline text-title-md font-bold">Danh sách thể loại sách</h2>
+          <p class="text-label-sm text-outline">Phân loại kho sách cho độc giả dễ tìm kiếm</p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openAddCategoryModal()">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        <span>Thêm thể loại</span>
+      </button>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-stone-200">
+              <th class="py-3 px-4">#ID</th>
+              <th class="py-3 px-4">Tên thể loại</th>
+              <th class="py-3 px-4">Mô tả</th>
+              <th class="py-3 px-4 text-right">Thao tác</th>
             </tr>
+          </thead>
+          <tbody id="categoriesTableBody" class="divide-y divide-stone-200 text-body-sm">
+            <tr><td colspan="4" class="py-8 text-center text-outline">Đang tải danh sách thể loại...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: QUẢN LÝ TÁC GIẢ (AUTHORS) -->
+  <section id="tabAuthorsSection" class="hidden space-y-6">
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">person_edit</span>
+        </div>
+        <div>
+          <h2 class="font-headline text-title-md font-bold">Danh sách tác giả</h2>
+          <p class="text-label-sm text-outline">Thông tin các tác giả trong nước và quốc tế</p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openAddAuthorModal()">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        <span>Thêm tác giả</span>
+      </button>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-stone-200">
+              <th class="py-3 px-4">#ID</th>
+              <th class="py-3 px-4">Họ và tên tác giả</th>
+              <th class="py-3 px-4">Tiểu sử tóm tắt</th>
+              <th class="py-3 px-4 text-right">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="authorsTableBody" class="divide-y divide-stone-200 text-body-sm">
+            <tr><td colspan="4" class="py-8 text-center text-outline">Đang tải danh sách tác giả...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: QUẢN LÝ NGƯỜI DÙNG (USERS) -->
+  <section id="tabUsersSection" class="hidden space-y-6">
+    <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">group</span>
+        </div>
+        <div>
+          <h2 class="font-headline text-title-md font-bold">Danh sách người dùng</h2>
+          <p class="text-label-sm text-outline">Tài khoản khách hàng và quản trị viên hệ thống</p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openAddUserModal()">
+        <span class="material-symbols-outlined text-[20px]">person_add</span>
+        <span>Thêm người dùng</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm">
+        <p class="text-label-sm text-outline">Người dùng & Khách hàng</p>
+        <p id="statTotalUsers" class="text-headline-sm font-bold mt-1">--</p>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm">
+        <p class="text-label-sm text-primary">Quản trị viên khác</p>
+        <p id="statAdminUsers" class="text-headline-sm font-bold text-primary mt-1">--</p>
+      </div>
+      <div class="bg-surface-container-lowest p-4 rounded-xl border border-stone-200 shadow-sm">
+        <p class="text-label-sm text-outline">Khách hàng (Customer)</p>
+        <p id="statCustomerUsers" class="text-headline-sm font-bold mt-1">--</p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container/60 text-label-sm text-outline uppercase tracking-wider border-b border-stone-200">
+              <th class="py-3 px-4">#ID</th>
+              <th class="py-3 px-4">Tài khoản</th>
+              <th class="py-3 px-4">Email</th>
+              <th class="py-3 px-4">Họ và tên</th>
+              <th class="py-3 px-4">Phân quyền vai trò</th>
+              <th class="py-3 px-4">Ngày tạo</th>
+              <th class="py-3 px-4 text-right">Xóa</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody" class="divide-y divide-stone-200 text-body-sm">
+            <tr><td colspan="7" class="py-8 text-center text-outline">Đang tải danh sách người dùng...</td></tr>
           </tbody>
         </table>
       </div>
@@ -300,8 +435,8 @@
 <!-- MODAL THÊM / SỬA SÁCH -->
 <div id="bookModal" class="fixed inset-0 z-[100] hidden">
   <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeBookModal()"></div>
-  <div class="relative max-w-lg mx-auto mt-20 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-outline-variant/30">
-    <div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant/20">
+  <div class="relative max-w-lg mx-auto mt-16 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-stone-200">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
       <h3 id="bookModalTitle" class="font-headline text-title-lg font-bold">Thêm sách mới</h3>
       <button onclick="closeBookModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline">
         <span class="material-symbols-outlined">close</span>
@@ -330,17 +465,11 @@
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="lbl" for="bookAuthor">Tác giả</label>
-          <select id="bookAuthor" class="field cursor-pointer">
-            <option value="1">1 - Tô Hoài</option>
-            <option value="2">2 - J.K. Rowling</option>
-          </select>
+          <select id="bookAuthor" class="field cursor-pointer"></select>
         </div>
         <div>
           <label class="lbl" for="bookCategory">Thể loại</label>
-          <select id="bookCategory" class="field cursor-pointer">
-            <option value="1">1 - Văn học Việt Nam</option>
-            <option value="2">2 - Viễn tưởng</option>
-          </select>
+          <select id="bookCategory" class="field cursor-pointer"></select>
         </div>
       </div>
 
@@ -362,11 +491,124 @@
   </div>
 </div>
 
+<!-- MODAL THÊM / SỬA THỂ LOẠI -->
+<div id="categoryModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeCategoryModal()"></div>
+  <div class="relative max-w-md mx-auto mt-24 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-stone-200">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
+      <h3 id="categoryModalTitle" class="font-headline text-title-lg font-bold">Thêm thể loại mới</h3>
+      <button onclick="closeCategoryModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form id="categoryForm" onsubmit="handleCategorySubmit(event)" class="space-y-4">
+      <input type="hidden" id="editCategoryId" value=""/>
+      <div>
+        <label class="lbl" for="categoryName">Tên thể loại <span class="text-error">*</span></label>
+        <input class="field" id="categoryName" type="text" placeholder="Ví dụ: Khoa học viễn tưởng, Kỹ năng sống..." required/>
+      </div>
+      <div>
+        <label class="lbl" for="categoryDesc">Mô tả</label>
+        <textarea class="field resize-none h-20" id="categoryDesc" placeholder="Mô tả ngắn gọn về thể loại này..."></textarea>
+      </div>
+      <div id="categoryFormError" class="hidden text-body-sm text-error bg-error-container/40 p-2.5 rounded-lg"></div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" class="btn-outline" onclick="closeCategoryModal()">Hủy</button>
+        <button type="submit" id="categorySubmitBtn" class="btn-primary">
+          <span class="material-symbols-outlined text-[18px]">check</span>
+          <span>Lưu thể loại</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL THÊM / SỬA TÁC GIẢ -->
+<div id="authorModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeAuthorModal()"></div>
+  <div class="relative max-w-md mx-auto mt-24 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-stone-200">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
+      <h3 id="authorModalTitle" class="font-headline text-title-lg font-bold">Thêm tác giả mới</h3>
+      <button onclick="closeAuthorModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form id="authorForm" onsubmit="handleAuthorSubmit(event)" class="space-y-4">
+      <input type="hidden" id="editAuthorId" value=""/>
+      <div>
+        <label class="lbl" for="authorName">Tên tác giả <span class="text-error">*</span></label>
+        <input class="field" id="authorName" type="text" placeholder="Ví dụ: Nam Cao, Nguyễn Du..." required/>
+      </div>
+      <div>
+        <label class="lbl" for="authorBio">Tiểu sử</label>
+        <textarea class="field resize-none h-20" id="authorBio" placeholder="Giới thiệu đôi nét về tác giả..."></textarea>
+      </div>
+      <div id="authorFormError" class="hidden text-body-sm text-error bg-error-container/40 p-2.5 rounded-lg"></div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" class="btn-outline" onclick="closeAuthorModal()">Hủy</button>
+        <button type="submit" id="authorSubmitBtn" class="btn-primary">
+          <span class="material-symbols-outlined text-[18px]">check</span>
+          <span>Lưu tác giả</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL THÊM NGƯỜI DÙNG -->
+<div id="userModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeUserModal()"></div>
+  <div class="relative max-w-md mx-auto mt-20 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-stone-200">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
+      <h3 class="font-headline text-title-lg font-bold">Thêm người dùng mới</h3>
+      <button onclick="closeUserModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form id="userForm" onsubmit="handleUserSubmit(event)" class="space-y-4">
+      <div>
+        <label class="lbl" for="userUsername">Tên đăng nhập <span class="text-error">*</span></label>
+        <input class="field" id="userUsername" type="text" placeholder="Ví dụ: nguyenvana" required minlength="3" maxlength="50"/>
+      </div>
+      <div>
+        <label class="lbl" for="userPassword">Mật khẩu <span class="text-error">*</span></label>
+        <input class="field" id="userPassword" type="password" placeholder="Tối thiểu 6 ký tự" minlength="6" required/>
+      </div>
+      <div>
+        <label class="lbl" for="userEmail">Email <span class="text-error">*</span></label>
+        <input class="field" id="userEmail" type="email" placeholder="example@email.com" required/>
+      </div>
+      <div>
+        <label class="lbl" for="userFullName">Họ và tên</label>
+        <input class="field" id="userFullName" type="text" placeholder="Nguyễn Văn A"/>
+      </div>
+      <div>
+        <label class="lbl" for="userRole">Phân quyền vai trò <span class="text-error">*</span></label>
+        <select class="field cursor-pointer" id="userRole">
+          <option value="ROLE_CUSTOMER">Khách hàng (ROLE_CUSTOMER)</option>
+          <option value="ROLE_ADMIN">Quản trị viên (ROLE_ADMIN)</option>
+        </select>
+      </div>
+      <div id="userFormError" class="hidden text-body-sm text-error bg-error-container/40 p-2.5 rounded-lg"></div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" class="btn-outline" onclick="closeUserModal()">Hủy</button>
+        <button type="submit" id="userSubmitBtn" class="btn-primary">
+          <span class="material-symbols-outlined text-[18px]">check</span>
+          <span>Tạo người dùng</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- MODAL CHI TIẾT ĐƠN HÀNG -->
 <div id="orderDetailModal" class="fixed inset-0 z-[100] hidden">
   <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeOrderDetailModal()"></div>
-  <div class="relative max-w-lg mx-auto mt-20 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-outline-variant/30">
-    <div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant/20">
+  <div class="relative max-w-lg mx-auto mt-20 bg-surface-container-lowest rounded-2xl shadow-2xl p-6 border border-stone-200">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
       <div>
         <h3 id="orderModalTitle" class="font-headline text-title-lg font-bold">Chi tiết đơn hàng</h3>
         <p id="orderModalSubtitle" class="text-label-sm text-outline"></p>
@@ -375,7 +617,6 @@
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
-
     <div id="orderModalContent" class="space-y-4"></div>
   </div>
 </div>
@@ -384,14 +625,16 @@
 const API = '';
 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 let role = localStorage.getItem('role') || sessionStorage.getItem('role');
+let currentUsername = localStorage.getItem('username') || sessionStorage.getItem('username');
 const fullName = localStorage.getItem('fullName') || sessionStorage.getItem('fullName');
 
-// Dự phòng: Giải mã JWT token để lấy quyền thực tế nếu storage bị thiếu
-if (token && (!role || role !== 'ROLE_ADMIN')) {
+// Giải mã JWT token để lấy username và role chính xác
+if (token) {
   try {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const payload = JSON.parse(window.atob(base64));
+    if (payload.sub) currentUsername = payload.sub;
     if (payload.role) {
       role = payload.role;
       (localStorage.getItem('token') ? localStorage : sessionStorage).setItem('role', role);
@@ -439,24 +682,30 @@ const STATUS_MAP = {
 };
 
 // TAB SWITCHING
-function switchTab(tab) {
-  const booksSec = document.getElementById('tabBooksSection');
-  const ordersSec = document.getElementById('tabOrdersSection');
-  const booksBtn = document.getElementById('tabBooksBtn');
-  const ordersBtn = document.getElementById('tabOrdersBtn');
+const TABS = ['books', 'orders', 'categories', 'authors', 'users'];
 
-  if (tab === 'books') {
-    booksSec.classList.remove('hidden');
-    ordersSec.classList.add('hidden');
-    booksBtn.classList.add('active');
-    ordersBtn.classList.remove('active');
-  } else {
-    booksSec.classList.add('hidden');
-    ordersSec.classList.remove('hidden');
-    booksBtn.classList.remove('active');
-    ordersBtn.classList.add('active');
-    loadAdminOrders();
-  }
+function switchTab(target) {
+  TABS.forEach(t => {
+    const sec = document.getElementById(`tab${capitalize(t)}Section`);
+    const btn = document.getElementById(`tab${capitalize(t)}Btn`);
+    if (t === target) {
+      sec.classList.remove('hidden');
+      btn.classList.add('active');
+    } else {
+      sec.classList.add('hidden');
+      btn.classList.remove('active');
+    }
+  });
+
+  if (target === 'books') loadAdminBooks();
+  else if (target === 'orders') loadAdminOrders();
+  else if (target === 'categories') loadAdminCategories();
+  else if (target === 'authors') loadAdminAuthors();
+  else if (target === 'users') loadAdminUsers();
+}
+
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 // === 1. QUẢN LÝ SÁCH ===
@@ -464,7 +713,7 @@ let allBooks = [];
 
 async function loadAdminBooks() {
   try {
-    const res = await fetch(API + '/api/books');
+    const res = await fetch(API + '/api/admin/books', { headers: authHeaders() });
     if (!res.ok) throw new Error('API error');
     allBooks = await res.json();
     updateBooksStats();
@@ -528,17 +777,34 @@ function filterBooks() {
   renderBooksTable(filtered);
 }
 
-// Modal Thêm / Sửa Sách
-function openAddBookModal() {
+async function populateBookDropdowns(selectedAuthorId, selectedCategoryId) {
+  try {
+    const [authRes, catRes] = await Promise.all([
+      fetch(API + '/api/admin/authors', { headers: authHeaders() }),
+      fetch(API + '/api/admin/categories', { headers: authHeaders() })
+    ]);
+    const authors = await authRes.json();
+    const categories = await catRes.json();
+
+    const authSel = document.getElementById('bookAuthor');
+    authSel.innerHTML = authors.map(a => `<option value="${a.id}" ${a.id === selectedAuthorId ? 'selected' : ''}>${a.name}</option>`).join('');
+
+    const catSel = document.getElementById('bookCategory');
+    catSel.innerHTML = categories.map(c => `<option value="${c.id}" ${c.id === selectedCategoryId ? 'selected' : ''}>${c.name}</option>`).join('');
+  } catch (_) {}
+}
+
+async function openAddBookModal() {
   document.getElementById('editBookId').value = '';
   document.getElementById('bookModalTitle').textContent = 'Thêm sách mới';
   document.getElementById('bookSubmitBtnText').textContent = 'Thêm sách';
   document.getElementById('bookForm').reset();
   document.getElementById('bookFormError').classList.add('hidden');
+  await populateBookDropdowns();
   document.getElementById('bookModal').classList.remove('hidden');
 }
 
-function openEditBookModal(id) {
+async function openEditBookModal(id) {
   const book = allBooks.find(b => b.id === id);
   if (!book) return;
   document.getElementById('editBookId').value = book.id;
@@ -548,8 +814,7 @@ function openEditBookModal(id) {
   document.getElementById('bookPrice').value = book.price;
   document.getElementById('bookStock').value = book.stockQuantity;
   document.getElementById('bookDesc').value = book.description || '';
-  if (book.author?.id) document.getElementById('bookAuthor').value = book.author.id;
-  if (book.category?.id) document.getElementById('bookCategory').value = book.category.id;
+  await populateBookDropdowns(book.author?.id, book.category?.id);
   document.getElementById('bookFormError').classList.add('hidden');
   document.getElementById('bookModal').classList.remove('hidden');
 }
@@ -625,9 +890,7 @@ let allOrders = [];
 
 async function loadAdminOrders() {
   try {
-    const res = await fetch(API + '/api/admin/orders', {
-      headers: authHeaders()
-    });
+    const res = await fetch(API + '/api/admin/orders', { headers: authHeaders() });
     if (!res.ok) throw new Error('API error');
     allOrders = await res.json();
     updateOrdersStats();
@@ -723,7 +986,7 @@ function viewOrderDetail(orderId) {
   document.getElementById('orderModalSubtitle').textContent = `Đặt lúc: ${formatDate(order.createdAt)} | Khách hàng: ${order.username}`;
 
   const itemsHtml = (order.items || []).map(it => `
-    <div class="flex items-center justify-between py-2 border-b border-outline-variant/15 text-body-sm">
+    <div class="flex items-center justify-between py-2 border-b border-stone-200 text-body-sm">
       <div class="flex-1">
         <p class="font-semibold text-on-surface">${it.bookTitle}</p>
         <p class="text-xs text-outline">${formatVND(it.price)} x ${it.quantity}</p>
@@ -746,12 +1009,12 @@ function viewOrderDetail(orderId) {
 
     <div>
       <h4 class="text-label-md font-semibold text-outline mb-2">Các món đã đặt (${(order.items || []).length}):</h4>
-      <div class="divide-y divide-outline-variant/15 bg-surface-container-low rounded-xl px-3">
+      <div class="divide-y divide-stone-200 bg-surface-container-low rounded-xl px-3">
         ${itemsHtml}
       </div>
     </div>
 
-    <div class="pt-3 border-t border-outline-variant/20 flex justify-between items-center">
+    <div class="pt-3 border-t border-stone-200 flex justify-between items-center">
       <span class="text-title-md font-bold">Tổng thanh toán:</span>
       <span class="text-headline-sm font-bold text-primary">${formatVND(order.totalAmount)}</span>
     </div>
@@ -764,8 +1027,421 @@ function closeOrderDetailModal() {
   document.getElementById('orderDetailModal').classList.add('hidden');
 }
 
-// Khởi chạy
-loadAdminBooks();
+// === 3. QUẢN LÝ THỂ LOẠI (CATEGORIES) ===
+let allCategories = [];
+
+async function loadAdminCategories() {
+  try {
+    const res = await fetch(API + '/api/admin/categories', { headers: authHeaders() });
+    if (!res.ok) throw new Error('API error');
+    allCategories = await res.json();
+    document.getElementById('categoriesBadgeCount').textContent = allCategories.length;
+    renderCategoriesTable(allCategories);
+  } catch (err) {
+    document.getElementById('categoriesTableBody').innerHTML = `
+      <tr><td colspan="4" class="py-8 text-center text-error">Lỗi khi tải danh sách thể loại.</td></tr>
+    `;
+  }
+}
+
+function renderCategoriesTable(cats) {
+  const tbody = document.getElementById('categoriesTableBody');
+  if (cats.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-outline">Chưa có thể loại nào.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = cats.map(c => `
+    <tr class="hover:bg-surface-container/30 transition">
+      <td class="py-3 px-4 font-mono font-semibold text-outline text-xs">#${c.id}</td>
+      <td class="py-3 px-4 font-semibold text-on-surface">${c.name}</td>
+      <td class="py-3 px-4 text-on-surface-variant max-w-[300px]">${c.description || '<span class="text-outline italic">Không có mô tả</span>'}</td>
+      <td class="py-3 px-4 text-right">
+        <div class="inline-flex items-center gap-1">
+          <button onclick="openEditCategoryModal(${c.id})" class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container transition" title="Sửa thể loại">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+          </button>
+          <button onclick="deleteCategory(${c.id}, '${c.name.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition" title="Xóa thể loại">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openAddCategoryModal() {
+  document.getElementById('editCategoryId').value = '';
+  document.getElementById('categoryModalTitle').textContent = 'Thêm thể loại mới';
+  document.getElementById('categoryForm').reset();
+  document.getElementById('categoryFormError').classList.add('hidden');
+  document.getElementById('categoryModal').classList.remove('hidden');
+}
+
+function openEditCategoryModal(id) {
+  const c = allCategories.find(item => item.id === id);
+  if (!c) return;
+  document.getElementById('editCategoryId').value = c.id;
+  document.getElementById('categoryModalTitle').textContent = 'Sửa thể loại';
+  document.getElementById('categoryName').value = c.name;
+  document.getElementById('categoryDesc').value = c.description || '';
+  document.getElementById('categoryFormError').classList.add('hidden');
+  document.getElementById('categoryModal').classList.remove('hidden');
+}
+
+function closeCategoryModal() {
+  document.getElementById('categoryModal').classList.add('hidden');
+}
+
+async function handleCategorySubmit(e) {
+  e.preventDefault();
+  const id = document.getElementById('editCategoryId').value;
+  const name = document.getElementById('categoryName').value.trim();
+  const description = document.getElementById('categoryDesc').value.trim();
+  const errBox = document.getElementById('categoryFormError');
+  errBox.classList.add('hidden');
+
+  const btn = document.getElementById('categorySubmitBtn');
+  btn.disabled = true;
+
+  try {
+    const url = id ? `${API}/api/admin/categories/${id}` : `${API}/api/admin/categories`;
+    const method = id ? 'PUT' : 'POST';
+    const res = await fetch(url, {
+      method,
+      headers: authHeaders(),
+      body: JSON.stringify({ name, description })
+    });
+
+    if (res.ok) {
+      closeCategoryModal();
+      await loadAdminCategories();
+      alert(id ? 'Cập nhật thể loại thành công!' : 'Thêm thể loại mới thành công!');
+    } else {
+      const err = await res.json();
+      errBox.textContent = err.message || 'Lỗi xử lý yêu cầu';
+      errBox.classList.remove('hidden');
+    }
+  } catch (_) {
+    errBox.textContent = 'Lỗi kết nối máy chủ';
+    errBox.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteCategory(id, name) {
+  if (!confirm(`Bạn có chắc chắn muốn xóa thể loại "${name}" (ID: #${id})?`)) return;
+  try {
+    const res = await fetch(`${API}/api/admin/categories/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok || res.status === 204) {
+      alert('Đã xóa thể loại thành công!');
+      loadAdminCategories();
+    } else {
+      const err = await res.json();
+      alert(err.message || 'Không thể xóa thể loại này');
+    }
+  } catch (_) {
+    alert('Lỗi khi gửi yêu cầu xóa');
+  }
+}
+
+// === 4. QUẢN LÝ TÁC GIẢ (AUTHORS) ===
+let allAuthors = [];
+
+async function loadAdminAuthors() {
+  try {
+    const res = await fetch(API + '/api/admin/authors', { headers: authHeaders() });
+    if (!res.ok) throw new Error('API error');
+    allAuthors = await res.json();
+    document.getElementById('authorsBadgeCount').textContent = allAuthors.length;
+    renderAuthorsTable(allAuthors);
+  } catch (err) {
+    document.getElementById('authorsTableBody').innerHTML = `
+      <tr><td colspan="4" class="py-8 text-center text-error">Lỗi khi tải danh sách tác giả.</td></tr>
+    `;
+  }
+}
+
+function renderAuthorsTable(authors) {
+  const tbody = document.getElementById('authorsTableBody');
+  if (authors.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-outline">Chưa có tác giả nào.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = authors.map(a => `
+    <tr class="hover:bg-surface-container/30 transition">
+      <td class="py-3 px-4 font-mono font-semibold text-outline text-xs">#${a.id}</td>
+      <td class="py-3 px-4 font-semibold text-on-surface">${a.name}</td>
+      <td class="py-3 px-4 text-on-surface-variant max-w-[300px]">${a.bio || '<span class="text-outline italic">Không có tiểu sử</span>'}</td>
+      <td class="py-3 px-4 text-right">
+        <div class="inline-flex items-center gap-1">
+          <button onclick="openEditAuthorModal(${a.id})" class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container transition" title="Sửa tác giả">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+          </button>
+          <button onclick="deleteAuthor(${a.id}, '${a.name.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition" title="Xóa tác giả">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openAddAuthorModal() {
+  document.getElementById('editAuthorId').value = '';
+  document.getElementById('authorModalTitle').textContent = 'Thêm tác giả mới';
+  document.getElementById('authorForm').reset();
+  document.getElementById('authorFormError').classList.add('hidden');
+  document.getElementById('authorModal').classList.remove('hidden');
+}
+
+function openEditAuthorModal(id) {
+  const a = allAuthors.find(item => item.id === id);
+  if (!a) return;
+  document.getElementById('editAuthorId').value = a.id;
+  document.getElementById('authorModalTitle').textContent = 'Sửa thông tin tác giả';
+  document.getElementById('authorName').value = a.name;
+  document.getElementById('authorBio').value = a.bio || '';
+  document.getElementById('authorFormError').classList.add('hidden');
+  document.getElementById('authorModal').classList.remove('hidden');
+}
+
+function closeAuthorModal() {
+  document.getElementById('authorModal').classList.add('hidden');
+}
+
+async function handleAuthorSubmit(e) {
+  e.preventDefault();
+  const id = document.getElementById('editAuthorId').value;
+  const name = document.getElementById('authorName').value.trim();
+  const bio = document.getElementById('authorBio').value.trim();
+  const errBox = document.getElementById('authorFormError');
+  errBox.classList.add('hidden');
+
+  const btn = document.getElementById('authorSubmitBtn');
+  btn.disabled = true;
+
+  try {
+    const url = id ? `${API}/api/admin/authors/${id}` : `${API}/api/admin/authors`;
+    const method = id ? 'PUT' : 'POST';
+    const res = await fetch(url, {
+      method,
+      headers: authHeaders(),
+      body: JSON.stringify({ name, bio })
+    });
+
+    if (res.ok) {
+      closeAuthorModal();
+      await loadAdminAuthors();
+      alert(id ? 'Cập nhật tác giả thành công!' : 'Thêm tác giả mới thành công!');
+    } else {
+      const err = await res.json();
+      errBox.textContent = err.message || 'Lỗi xử lý yêu cầu';
+      errBox.classList.remove('hidden');
+    }
+  } catch (_) {
+    errBox.textContent = 'Lỗi kết nối máy chủ';
+    errBox.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteAuthor(id, name) {
+  if (!confirm(`Bạn có chắc chắn muốn xóa tác giả "${name}" (ID: #${id})?`)) return;
+  try {
+    const res = await fetch(`${API}/api/admin/authors/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok || res.status === 204) {
+      alert('Đã xóa tác giả thành công!');
+      loadAdminAuthors();
+    } else {
+      const err = await res.json();
+      alert(err.message || 'Không thể xóa tác giả này');
+    }
+  } catch (_) {
+    alert('Lỗi khi gửi yêu cầu xóa');
+  }
+}
+
+// === 5. QUẢN LÝ NGƯỜI DÙNG (USERS) ===
+let allUsers = [];
+
+async function loadAdminUsers() {
+  try {
+    const res = await fetch(API + '/api/admin/users', { headers: authHeaders() });
+    if (!res.ok) throw new Error('API error');
+    allUsers = await res.json();
+    updateUsersStats();
+    renderUsersTable(allUsers);
+  } catch (err) {
+    document.getElementById('usersTableBody').innerHTML = `
+      <tr><td colspan="7" class="py-8 text-center text-error">Lỗi khi tải danh sách người dùng.</td></tr>
+    `;
+  }
+}
+
+function updateUsersStats() {
+  const otherUsers = allUsers.filter(u => u.username !== currentUsername);
+  document.getElementById('statTotalUsers').textContent = otherUsers.length;
+  document.getElementById('usersBadgeCount').textContent = otherUsers.length;
+  const admins = otherUsers.filter(u => u.role === 'ROLE_ADMIN').length;
+  const customers = otherUsers.filter(u => u.role !== 'ROLE_ADMIN').length;
+  document.getElementById('statAdminUsers').textContent = admins;
+  document.getElementById('statCustomerUsers').textContent = customers;
+}
+
+function renderUsersTable(users) {
+  const tbody = document.getElementById('usersTableBody');
+  // Ẩn tài khoản của chính mình khỏi danh sách quản lý
+  const otherUsers = users.filter(u => u.username !== currentUsername);
+
+  if (otherUsers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-outline">Không có người dùng nào khác trong hệ thống.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = otherUsers.map(u => {
+    const isTargetAdmin = (u.role === 'ROLE_ADMIN');
+
+    return `
+      <tr class="hover:bg-surface-container/30 transition">
+        <td class="py-3 px-4 font-mono font-semibold text-outline text-xs">#${u.id}</td>
+        <td class="py-3 px-4 font-semibold text-on-surface">${u.username}</td>
+        <td class="py-3 px-4 text-on-surface-variant">${u.email}</td>
+        <td class="py-3 px-4 font-medium text-on-surface">${u.fullName || '<span class="text-outline italic">Chưa cập nhật</span>'}</td>
+        <td class="py-3 px-4">
+          ${isTargetAdmin ? `
+            <span class="badge bg-amber-100 text-amber-800">
+              <span class="material-symbols-outlined text-[13px]">shield</span>
+              Quản trị viên (ROLE_ADMIN)
+            </span>
+          ` : `
+            <select onchange="changeUserRole(${u.id}, this.value)" class="field py-1 px-2.5 text-xs font-semibold rounded-full cursor-pointer bg-blue-100 text-blue-800">
+              <option value="ROLE_CUSTOMER" ${u.role === 'ROLE_CUSTOMER' ? 'selected' : ''}>Khách hàng (ROLE_CUSTOMER)</option>
+              <option value="ROLE_ADMIN" ${u.role === 'ROLE_ADMIN' ? 'selected' : ''}>Nâng lên Quản trị viên</option>
+            </select>
+          `}
+        </td>
+        <td class="py-3 px-4 text-outline text-xs">${formatDate(u.createdAt)}</td>
+        <td class="py-3 px-4 text-right">
+          ${isTargetAdmin ? `
+            <span class="text-xs text-outline italic" title="Tài khoản Admin cùng cấp được bảo vệ">Bảo vệ</span>
+          ` : `
+            <button onclick="deleteUser(${u.id}, '${u.username}')" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition" title="Xóa tài khoản">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
+          `}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function changeUserRole(userId, newRole) {
+  try {
+    const res = await fetch(`${API}/api/admin/users/${userId}/role?role=${newRole}`, {
+      method: 'PATCH',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminUsers();
+      alert('Đã cập nhật phân quyền người dùng thành công!');
+    } else {
+      const err = await res.json();
+      alert(err.message || 'Không thể đổi quyền người dùng');
+      loadAdminUsers();
+    }
+  } catch (_) {
+    alert('Lỗi kết nối khi cập nhật người dùng');
+    loadAdminUsers();
+  }
+}
+
+async function deleteUser(id, username) {
+  if (!confirm(`Bạn có chắc chắn muốn xóa tài khoản "${username}" (ID: #${id})?`)) return;
+  try {
+    const res = await fetch(`${API}/api/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok || res.status === 204) {
+      alert('Đã xóa người dùng thành công!');
+      loadAdminUsers();
+    } else {
+      const err = await res.json();
+      alert(err.message || 'Không thể xóa người dùng này');
+    }
+  } catch (_) {
+    alert('Lỗi khi gửi yêu cầu xóa người dùng');
+  }
+}
+
+function openAddUserModal() {
+  document.getElementById('userForm').reset();
+  document.getElementById('userFormError').classList.add('hidden');
+  document.getElementById('userModal').classList.remove('hidden');
+}
+
+function closeUserModal() {
+  document.getElementById('userModal').classList.add('hidden');
+}
+
+async function handleUserSubmit(e) {
+  e.preventDefault();
+  const username = document.getElementById('userUsername').value.trim();
+  const password = document.getElementById('userPassword').value;
+  const email = document.getElementById('userEmail').value.trim();
+  const fullName = document.getElementById('userFullName').value.trim();
+  const role = document.getElementById('userRole').value;
+  const errBox = document.getElementById('userFormError');
+  errBox.classList.add('hidden');
+
+  const btn = document.getElementById('userSubmitBtn');
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API}/api/admin/users`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ username, password, email, fullName, role })
+    });
+
+    if (res.ok) {
+      closeUserModal();
+      await loadAdminUsers();
+      alert('Tạo người dùng mới thành công!');
+    } else {
+      const err = await res.json();
+      errBox.textContent = err.message || (err.fieldErrors ? Object.values(err.fieldErrors).join(', ') : 'Lỗi khi tạo người dùng');
+      errBox.classList.remove('hidden');
+    }
+  } catch (_) {
+    errBox.textContent = 'Lỗi kết nối máy chủ';
+    errBox.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Khởi chạy: Tải toàn bộ dữ liệu thống kê ngay từ đầu để các tab hiển thị đầy đủ số lượng
+async function initDashboard() {
+  await Promise.allSettled([
+    loadAdminBooks(),
+    loadAdminOrders(),
+    loadAdminCategories(),
+    loadAdminAuthors(),
+    loadAdminUsers()
+  ]);
+}
+initDashboard();
 </script>
 </body>
 </html>

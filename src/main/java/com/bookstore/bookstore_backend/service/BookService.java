@@ -29,11 +29,11 @@ public class BookService {
     }
 
     public List<Book> findAll() {
-        return bookRepository.findAll();
+        return bookRepository.findByIsDeletedFalse();
     }
 
     public Book findById(Long id) {
-        return bookRepository.findById(id)
+        return bookRepository.findByIdAndIsDeletedFalse(id)
             .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy sách với ID: " + id));
     }
 
@@ -51,7 +51,8 @@ public class BookService {
 
     public void delete(Long id) {
         Book book = findById(id);
-        bookRepository.delete(book);
+        book.setDeleted(true);
+        bookRepository.save(book);
     }
 
     private void mapRequestToEntity(BookRequest req, Book book) {

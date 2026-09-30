@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(100) NOT NULL UNIQUE,
     full_name VARCHAR(100),
     role VARCHAR(20) NOT NULL DEFAULT 'ROLE_CUSTOMER',
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -20,14 +21,16 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS authors (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    bio TEXT
+    bio TEXT,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- 3. Bảng Thể loại
 CREATE TABLE IF NOT EXISTS categories (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
-    description TEXT
+    description TEXT,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- 4. Bảng Sách
@@ -40,6 +43,7 @@ CREATE TABLE IF NOT EXISTS books (
     image_url VARCHAR(255),
     author_id BIGINT,
     category_id BIGINT,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL

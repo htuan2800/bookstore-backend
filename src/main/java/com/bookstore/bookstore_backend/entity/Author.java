@@ -19,4 +19,7 @@ public class Author {
 
     @Column(columnDefinition = "TEXT")
     private String bio;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 }

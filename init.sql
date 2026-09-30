@@ -113,3 +113,9 @@ INSERT INTO categories (name, description) VALUES
 INSERT INTO books (title, price, stock_quantity, description, author_id, category_id) VALUES
 ('Dế Mèn Phiêu Lưu Ký', 50000.00, 100, 'Truyện đồng thoại dành cho thiếu nhi', 1, 1),
 ('Harry Potter và Hòn Đá Phù Thủy', 150000.00, 50, 'Tập 1 bộ truyện Harry Potter', 2, 2);
+
+
+ALTER TABLE books ADD COLUMN is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE users ADD COLUMN is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE authors ADD COLUMN is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE categories ADD COLUMN is_deleted BOOLEAN NOT NULL DEFAULT FALSE;

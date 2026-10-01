@@ -49,19 +49,7 @@ CREATE TABLE IF NOT EXISTS books (
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
--- 5. Bảng Đánh giá
-CREATE TABLE IF NOT EXISTS reviews (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    book_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- 6. Bảng Giỏ hàng
+-- 5. Bảng Giỏ hàng
 CREATE TABLE IF NOT EXISTS cart_items (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -72,7 +60,7 @@ CREATE TABLE IF NOT EXISTS cart_items (
     CONSTRAINT unique_user_book UNIQUE (user_id, book_id)
 );
 
--- 7. Bảng Đơn hàng
+-- 6. Bảng Đơn hàng
 CREATE TABLE IF NOT EXISTS orders (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -83,7 +71,7 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 8. Bảng Chi tiết đơn hàng
+-- 7. Bảng Chi tiết đơn hàng
 CREATE TABLE IF NOT EXISTS order_items (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     order_id BIGINT NOT NULL,

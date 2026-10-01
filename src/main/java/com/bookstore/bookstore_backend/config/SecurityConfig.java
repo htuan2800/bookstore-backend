@@ -82,6 +82,11 @@ public class SecurityConfig {
                 ).permitAll()
 
                 // =========================
+                // ACTUATOR / HEALTH CHECK
+                // =========================
+                .requestMatchers("/actuator/**").permitAll()
+
+                // =========================
                 // STATIC FILES
                 // =========================
                 .requestMatchers(
@@ -102,7 +107,7 @@ public class SecurityConfig {
                 // EVERYTHING ELSE
                 // =========================
                 .anyRequest()
-                .authenticated()
+                .authenticated()             
             )
 
             // JWT filter

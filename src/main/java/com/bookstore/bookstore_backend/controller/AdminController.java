@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.bookstore_backend.dto.AuthorRequest;
 import com.bookstore.bookstore_backend.dto.BookRequest;
+import com.bookstore.bookstore_backend.dto.BookResponse;
 import com.bookstore.bookstore_backend.dto.CategoryRequest;
 import com.bookstore.bookstore_backend.dto.OrderResponse;
 import com.bookstore.bookstore_backend.dto.UserCreateRequest;
@@ -33,6 +34,7 @@ import com.bookstore.bookstore_backend.service.OrderService;
 import com.bookstore.bookstore_backend.service.UserService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * API quản trị — chỉ dành cho ROLE_ADMIN.
@@ -40,6 +42,7 @@ import jakarta.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin")
+@RequiredArgsConstructor 
 public class AdminController {
 
     private final BookService bookService;
@@ -48,23 +51,11 @@ public class AdminController {
     private final CategoryService categoryService;
     private final UserService userService;
 
-    public AdminController(BookService bookService,
-                           OrderService orderService,
-                           AuthorService authorService,
-                           CategoryService categoryService,
-                           UserService userService) {
-        this.bookService = bookService;
-        this.orderService = orderService;
-        this.authorService = authorService;
-        this.categoryService = categoryService;
-        this.userService = userService;
-    }
-
     // === QUẢN LÝ SÁCH ===
 
     @GetMapping("/books")
-    public ResponseEntity<List<Book>> getAllBooks() {
-        return ResponseEntity.ok(bookService.findAll());
+    public ResponseEntity<List<BookResponse>> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @PostMapping("/books")

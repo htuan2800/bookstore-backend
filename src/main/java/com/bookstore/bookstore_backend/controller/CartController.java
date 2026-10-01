@@ -20,6 +20,7 @@ import com.bookstore.bookstore_backend.dto.CartItemResponse;
 import com.bookstore.bookstore_backend.service.CartService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * API giỏ hàng — chỉ dành cho ROLE_CUSTOMER (đã xác thực).
@@ -27,13 +28,10 @@ import jakarta.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/cart")
+@RequiredArgsConstructor 
 public class CartController {
 
     private final CartService cartService;
-
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
-    }
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> getCart(@AuthenticationPrincipal UserDetails user) {

@@ -11,16 +11,14 @@ import com.bookstore.bookstore_backend.entity.User;
 import com.bookstore.bookstore_backend.exception.ResourceNotFoundException;
 import com.bookstore.bookstore_backend.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor 
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public UserResponse create(UserCreateRequest req) {
         if (userRepository.existsByUsername(req.username())) {

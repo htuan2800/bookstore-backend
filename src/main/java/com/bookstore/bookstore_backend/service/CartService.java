@@ -17,20 +17,15 @@ import com.bookstore.bookstore_backend.repository.BookRepository;
 import com.bookstore.bookstore_backend.repository.CartItemRepository;
 import com.bookstore.bookstore_backend.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor 
 public class CartService {
 
     private final CartItemRepository cartItemRepository;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
-
-    public CartService(CartItemRepository cartItemRepository,
-                       BookRepository bookRepository,
-                       UserRepository userRepository) {
-        this.cartItemRepository = cartItemRepository;
-        this.bookRepository = bookRepository;
-        this.userRepository = userRepository;
-    }
 
     public List<CartItemResponse> getCart(String username) {
         User user = findUser(username);

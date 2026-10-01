@@ -9,14 +9,13 @@ import com.bookstore.bookstore_backend.entity.Author;
 import com.bookstore.bookstore_backend.exception.ResourceNotFoundException;
 import com.bookstore.bookstore_backend.repository.AuthorRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor 
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
-
-    public AuthorService(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
 
     public List<Author> findAll() {
         return authorRepository.findByIsDeletedFalse();

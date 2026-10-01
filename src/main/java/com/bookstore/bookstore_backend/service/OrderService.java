@@ -20,31 +20,16 @@ import com.bookstore.bookstore_backend.repository.CartItemRepository;
 import com.bookstore.bookstore_backend.repository.OrderRepository;
 import com.bookstore.bookstore_backend.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor 
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository,
-                        CartItemRepository cartItemRepository,
-                        UserRepository userRepository) {
-        this.orderRepository = orderRepository;
-        this.cartItemRepository = cartItemRepository;
-        this.userRepository = userRepository;
-    }
-
-    /**
-     * Tạo đơn hàng từ giỏ hàng hiện tại.
-     * Logic nghiệp vụ:
-     * 1. Lấy tất cả items trong giỏ
-     * 2. Kiểm tra tồn kho từng sách
-     * 3. Trừ tồn kho
-     * 4. Tính tổng tiền
-     * 5. Tạo Order + OrderItems
-     * 6. Xóa giỏ hàng
-     */
     @Transactional
     public OrderResponse placeOrder(String username, OrderRequest req) {
         User user = findUser(username);

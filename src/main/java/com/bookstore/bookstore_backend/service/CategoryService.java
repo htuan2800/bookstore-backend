@@ -9,14 +9,13 @@ import com.bookstore.bookstore_backend.entity.Category;
 import com.bookstore.bookstore_backend.exception.ResourceNotFoundException;
 import com.bookstore.bookstore_backend.repository.CategoryRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor 
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 
     public List<Category> findAll() {
         return categoryRepository.findByIsDeletedFalse();

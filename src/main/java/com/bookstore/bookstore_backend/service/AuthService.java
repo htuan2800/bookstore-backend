@@ -12,20 +12,15 @@ import com.bookstore.bookstore_backend.entity.User;
 import com.bookstore.bookstore_backend.repository.UserRepository;
 import com.bookstore.bookstore_backend.security.JwtService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor 
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       AuthenticationManager authenticationManager, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-    }
 
     public void register(RegisterRequest req) {
         if (!req.password().equals(req.confirmPassword()))

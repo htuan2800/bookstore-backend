@@ -1,5 +1,6 @@
 package com.bookstore.bookstore_backend.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -10,14 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.bookstore_backend.dto.BookResponse;
+import com.bookstore.bookstore_backend.entity.Author;
 import com.bookstore.bookstore_backend.entity.Book;
+import com.bookstore.bookstore_backend.entity.Category;
+import com.bookstore.bookstore_backend.service.AuthorService;
 import com.bookstore.bookstore_backend.service.BookService;
+import com.bookstore.bookstore_backend.service.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 
 /**
- * API công khai để xem danh sách sách.
- * Controller chỉ tiếp nhận HTTP request, logic nằm ở BookService.
+ * API công khai để xem và tìm kiếm danh sách sách, thể loại, tác giả.
  */
 @RestController
 @RequestMapping("/api/books")
@@ -25,10 +29,22 @@ import lombok.RequiredArgsConstructor;
 public class BookController {
 
     private final BookService bookService;
+    private final CategoryService categoryService;
+    private final AuthorService authorService;
 
     @GetMapping
     public ResponseEntity<List<BookResponse>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getPublicCategories() {
+        return ResponseEntity.ok(categoryService.findAll());
+    }
+
+    @GetMapping("/authors")
+    public ResponseEntity<List<Author>> getPublicAuthors() {
+        return ResponseEntity.ok(authorService.findAll());
     }
 
     @GetMapping("/{id}")
@@ -38,7 +54,14 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<BookResponse>> searchBooks(@RequestParam(required = false) String keyword) {
-        return ResponseEntity.ok(bookService.searchBooks(keyword));
+    public ResponseEntity<List<BookResponse>> searchBooks(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) List<Long> categoryIds,
+            @RequestParam(required = false) List<Long> authorIds,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice) {
+        return ResponseEntity.ok(bookService.searchBooks(keyword, categoryIds, authorIds, minPrice, maxPrice));
     }
 }
+
+

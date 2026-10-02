@@ -51,7 +51,7 @@
 
 <!-- HERO BANNER -->
 <section class="pt-16 px-margin-mobile max-w-lg mx-auto">
-  <div class="mt-4 rounded-2xl bg-gradient-to-br from-primary/10 via-surface-container-low to-tertiary/5 p-5 relative overflow-hidden">
+  <div class="mt-4 rounded-2xl bg-gradient-to-br from-primary/10 via-surface-container-low to-tertiary/5 p-5 relative overflow-hidden shadow-sm">
     <div class="absolute top-2 right-2 opacity-10">
       <span class="material-symbols-outlined text-[80px] text-primary" style="font-variation-settings:'FILL' 1">auto_stories</span>
     </div>
@@ -60,7 +60,17 @@
       <span class="text-label-sm text-primary font-bold tracking-wide uppercase">Mới cập nhật</span>
     </div>
     <h2 class="font-headline text-headline-lg tracking-tight mb-1">Khám phá kho sách</h2>
-    <p class="text-body-md text-on-surface-variant max-w-[260px]">Tìm cuốn sách tiếp theo nuôi dưỡng tâm hồn bạn</p>
+    <p class="text-body-md text-on-surface-variant max-w-[260px] mb-4">Tìm cuốn sách tiếp theo nuôi dưỡng tâm hồn bạn</p>
+    
+    <!-- Quick Search bar on home page -->
+    <form action="search.html" method="GET" class="relative flex items-center">
+      <span class="material-symbols-outlined absolute left-3.5 text-primary text-[20px]">search</span>
+      <input type="text" name="keyword" placeholder="Tìm tên sách, tác giả..." 
+        class="w-full pl-10 pr-24 py-2.5 bg-surface-container-lowest border border-stone-200 rounded-xl text-body-sm shadow-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition placeholder:text-outline/60"/>
+      <button type="submit" class="absolute right-1.5 px-3 py-1.5 bg-primary text-on-primary rounded-lg text-label-sm font-semibold hover:bg-primary-container transition flex items-center gap-1">
+        <span>Tìm</span>
+      </button>
+    </form>
   </div>
 </section>
 
@@ -104,7 +114,7 @@
       <span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">home</span>
       <span>Trang chủ</span>
     </a>
-    <a href="#" class="nav-btn">
+    <a href="search.html" class="nav-btn">
       <span class="material-symbols-outlined text-[24px]">search</span>
       <span>Tìm kiếm</span>
     </a>

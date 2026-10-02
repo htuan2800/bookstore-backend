@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Tìm kiếm sách - BookNest</title>
+<meta name="description" content="Tra cứu và tìm kiếm sách theo tên, tác giả, thể loại tại BookNest."/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/tailwind-config.js"></script>
+<style type="text/tailwindcss">
+  .card { @apply bg-surface-container-lowest rounded-2xl shadow-sm border border-stone-200/80 overflow-hidden transition duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer; }
+  .badge { @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-semibold; }
+  .nav-btn { @apply flex flex-col items-center gap-0.5 text-outline text-label-sm transition hover:text-primary; }
+  .nav-btn.active { @apply text-primary font-semibold; }
+  
+  /* Combobox Menu Styling */
+  .combobox-btn { @apply w-full px-3.5 py-2.5 bg-surface-container-lowest border border-stone-200 rounded-xl text-body-sm font-medium text-on-surface flex items-center justify-between shadow-sm hover:border-primary hover:bg-surface-container-low transition cursor-pointer outline-none focus:ring-2 focus:ring-primary/40; }
+  .combobox-btn.active-filter { @apply border-primary text-primary bg-primary/5 font-semibold; }
+  .combobox-dropdown { @apply absolute left-0 right-0 top-full mt-1.5 z-40 bg-surface-container-lowest border border-stone-200 rounded-2xl shadow-xl p-3 space-y-2 hidden transition-all duration-200 transform origin-top scale-95 opacity-0; }
+  .combobox-dropdown.open { @apply block scale-100 opacity-100; }
+  .checkbox-custom { @apply w-4 h-4 rounded text-primary focus:ring-primary border-stone-300 accent-amber-700 cursor-pointer; }
+</style>
+<style>
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-up { animation: fadeUp 0.3s ease-out both; }
+  .skeleton { background: linear-gradient(90deg, #f0eee8 25%, #e5e2dc 50%, #f0eee8 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.75rem; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body text-body-md min-h-screen pb-24" onclick="closeAllComboboxesOutside(event)">
+
+<!-- HEADER -->
+<header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-stone-200/60">
+  <div class="h-14 max-w-lg mx-auto px-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="index.html" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-surface-container transition text-on-surface">
+        <span class="material-symbols-outlined text-[22px]">arrow_back</span>
+      </a>
+      <div>
+        <span class="text-label-sm tracking-wider uppercase text-outline">BookNest</span>
+        <h1 class="font-headline text-title-md leading-tight">Tra cứu & Tìm kiếm</h1>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="greeting" class="text-body-sm text-on-surface-variant mr-1"></span>
+      <a id="loginLink" href="login.html" class="px-3 py-1.5 rounded-lg bg-primary text-on-primary text-label-sm font-semibold hover:bg-primary-container transition">Đăng nhập</a>
+      <button id="logoutBtn" class="hidden w-9 h-9 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition" title="Đăng xuất">
+        <span class="material-symbols-outlined text-[20px] text-outline">logout</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-lg mx-auto pt-16 px-4">
+  
+  <!-- SEARCH BAR BOX -->
+  <section class="mt-3">
+    <div class="relative flex items-center shadow-sm rounded-2xl">
+      <span class="material-symbols-outlined absolute left-3.5 text-primary text-[22px]" style="font-variation-settings:'FILL' 1">search</span>
+      <input id="searchInput" type="text" placeholder="Nhập tên sách, tên tác giả..."
+        class="w-full pl-11 pr-10 py-3.5 bg-surface-container-lowest border border-stone-200 rounded-2xl text-body-md outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition placeholder:text-outline/60"
+        oninput="handleSearchInput()"/>
+      <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 w-7 h-7 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-outline transition">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- COMBOBOX FILTER MENUS SECTION -->
+  <section class="mt-3 bg-surface-container-lowest rounded-2xl p-4 border border-stone-200 shadow-sm space-y-3 relative">
+    <div class="flex items-center justify-between border-b border-stone-100 pb-2.5">
+      <div class="flex items-center gap-1.5 font-semibold text-title-sm text-on-surface">
+        <span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+        <span>Bộ lọc tìm kiếm (Combobox)</span>
+      </div>
+      <button id="resetFilterBtn" onclick="resetFilters()" class="hidden text-label-sm text-primary font-semibold hover:underline flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">refresh</span>
+        <span>Đặt lại tất cả</span>
+      </button>
+    </div>
+
+    <!-- COMBOBOX GRID (2 COLS) -->
+    <div class="grid grid-cols-2 gap-2.5">
+      
+      <!-- 1. COMBOBOX THỂ LOẠI -->
+      <div class="relative combobox-container">
+        <label class="block text-label-sm text-outline font-medium mb-1">Thể loại</label>
+        <button id="categoryComboBtn" onclick="toggleCombobox('categoryComboDropdown', event)" class="combobox-btn">
+          <span id="categoryComboLabel" class="truncate">Tất cả thể loại</span>
+          <span class="material-symbols-outlined text-[20px] text-outline ml-1">expand_more</span>
+        </button>
+
+        <!-- Dropdown Menu Combobox cho Thể loại -->
+        <div id="categoryComboDropdown" class="combobox-dropdown" onclick="event.stopPropagation()">
+          <div class="relative mb-2">
+            <span class="material-symbols-outlined absolute left-2.5 top-2.5 text-[16px] text-outline">search</span>
+            <input type="text" id="catSearchInput" placeholder="Tìm thể loại..." oninput="filterCatListInCombo()"
+              class="w-full pl-8 pr-2 py-1.5 bg-surface-container-low border border-stone-200 rounded-lg text-body-sm outline-none focus:ring-1 focus:ring-primary"/>
+          </div>
+          <div id="categoryComboList" class="max-h-48 overflow-y-auto space-y-1 pr-1 no-scrollbar">
+            <p class="text-body-sm text-outline p-2">Đang tải...</p>
+          </div>
+          <div class="pt-2 border-t border-stone-100 flex justify-between items-center text-label-sm">
+            <button onclick="clearAllCatCheckboxes()" class="text-outline hover:text-primary font-semibold">Bỏ chọn hết</button>
+            <button onclick="closeCombobox('categoryComboDropdown')" class="px-3 py-1 bg-primary text-on-primary rounded-lg font-semibold">Xong</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. COMBOBOX TÁC GIẢ -->
+      <div class="relative combobox-container">
+        <label class="block text-label-sm text-outline font-medium mb-1">Tác giả</label>
+        <button id="authorComboBtn" onclick="toggleCombobox('authorComboDropdown', event)" class="combobox-btn">
+          <span id="authorComboLabel" class="truncate">Tất cả tác giả</span>
+          <span class="material-symbols-outlined text-[20px] text-outline ml-1">expand_more</span>
+        </button>
+
+        <!-- Dropdown Menu Combobox cho Tác giả -->
+        <div id="authorComboDropdown" class="combobox-dropdown" onclick="event.stopPropagation()">
+          <div class="relative mb-2">
+            <span class="material-symbols-outlined absolute left-2.5 top-2.5 text-[16px] text-outline">search</span>
+            <input type="text" id="authorSearchInput" placeholder="Tìm tác giả..." oninput="filterAuthorListInCombo()"
+              class="w-full pl-8 pr-2 py-1.5 bg-surface-container-low border border-stone-200 rounded-lg text-body-sm outline-none focus:ring-1 focus:ring-primary"/>
+          </div>
+          <div id="authorComboList" class="max-h-48 overflow-y-auto space-y-1 pr-1 no-scrollbar">
+            <p class="text-body-sm text-outline p-2">Đang tải...</p>
+          </div>
+          <div class="pt-2 border-t border-stone-100 flex justify-between items-center text-label-sm">
+            <button onclick="clearAllAuthorCheckboxes()" class="text-outline hover:text-primary font-semibold">Bỏ chọn hết</button>
+            <button onclick="closeCombobox('authorComboDropdown')" class="px-3 py-1 bg-primary text-on-primary rounded-lg font-semibold">Xong</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. COMBOBOX GIÁ TIỀN (THAY CHO KHO HÀNG) -->
+      <div class="relative combobox-container">
+        <label class="block text-label-sm text-outline font-medium mb-1">Mức giá</label>
+        <button id="priceComboBtn" onclick="toggleCombobox('priceComboDropdown', event)" class="combobox-btn">
+          <span id="priceComboLabel" class="truncate">Tất cả mức giá</span>
+          <span class="material-symbols-outlined text-[20px] text-outline ml-1">expand_more</span>
+        </button>
+
+        <!-- Dropdown Menu Combobox cho Giá tiền -->
+        <div id="priceComboDropdown" class="combobox-dropdown" onclick="event.stopPropagation()">
+          <div class="space-y-1 py-1">
+            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container cursor-pointer text-body-sm font-medium">
+              <input type="checkbox" data-min="0" data-max="50000" data-label="Dưới 50k" class="price-checkbox checkbox-custom" onchange="applyFilters()"/>
+              <span>Dưới 50.000đ</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container cursor-pointer text-body-sm font-medium">
+              <input type="checkbox" data-min="50000" data-max="100000" data-label="50k - 100k" class="price-checkbox checkbox-custom" onchange="applyFilters()"/>
+              <span>50.000đ - 100.000đ</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container cursor-pointer text-body-sm font-medium">
+              <input type="checkbox" data-min="100000" data-max="200000" data-label="100k - 200k" class="price-checkbox checkbox-custom" onchange="applyFilters()"/>
+              <span>100.000đ - 200.000đ</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container cursor-pointer text-body-sm font-medium">
+              <input type="checkbox" data-min="200000" data-max="500000" data-label="200k - 500k" class="price-checkbox checkbox-custom" onchange="applyFilters()"/>
+              <span>200.000đ - 500.000đ</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container cursor-pointer text-body-sm font-medium">
+              <input type="checkbox" data-min="500000" data-max="999999999" data-label="Trên 500k" class="price-checkbox checkbox-custom" onchange="applyFilters()"/>
+              <span>Trên 500.000đ</span>
+            </label>
+          </div>
+          <div class="pt-2 border-t border-stone-100 flex justify-between items-center text-label-sm">
+            <button onclick="clearAllPriceCheckboxes()" class="text-outline hover:text-primary font-semibold">Bỏ chọn hết</button>
+            <button onclick="closeCombobox('priceComboDropdown')" class="px-3 py-1 bg-primary text-on-primary rounded-lg font-semibold">Xong</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. COMBOBOX SẮP XẾP -->
+      <div class="relative combobox-container">
+        <label class="block text-label-sm text-outline font-medium mb-1">Sắp xếp</label>
+        <button id="sortComboBtn" onclick="toggleCombobox('sortComboDropdown', event)" class="combobox-btn">
+          <span id="sortComboLabel" class="truncate">Mặc định</span>
+          <span class="material-symbols-outlined text-[20px] text-outline ml-1">expand_more</span>
+        </button>
+
+        <!-- Dropdown Menu Combobox cho Sắp xếp -->
+        <div id="sortComboDropdown" class="combobox-dropdown" onclick="event.stopPropagation()">
+          <div class="space-y-1 py-1">
+            <button onclick="selectSortOption('DEFAULT', 'Mặc định')" class="w-full text-left p-2 rounded-lg hover:bg-surface-container text-body-sm font-medium hover:text-primary">Mặc định</button>
+            <button onclick="selectSortOption('PRICE_ASC', 'Giá: Thấp -> Cao')" class="w-full text-left p-2 rounded-lg hover:bg-surface-container text-body-sm font-medium hover:text-primary">Giá: Thấp -> Cao</button>
+            <button onclick="selectSortOption('PRICE_DESC', 'Giá: Cao -> Thấp')" class="w-full text-left p-2 rounded-lg hover:bg-surface-container text-body-sm font-medium hover:text-primary">Giá: Cao -> Thấp</button>
+            <button onclick="selectSortOption('NAME_ASC', 'Tên sách: A -> Z')" class="w-full text-left p-2 rounded-lg hover:bg-surface-container text-body-sm font-medium hover:text-primary">Tên sách: A -> Z</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RESULT COUNTER & ACTIVE FILTER BADGES -->
+  <section class="mt-4 space-y-2 px-1">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-title-sm font-bold text-on-surface">Kết quả tìm kiếm</span>
+        <span id="resultCountBadge" class="badge bg-primary/10 text-primary font-bold">0 cuốn</span>
+      </div>
+    </div>
+    <div id="activeFilterTags" class="flex flex-wrap items-center gap-1.5 pt-1"></div>
+  </section>
+
+  <!-- SKELETON LOADING -->
+  <div id="skeleton" class="mt-4 space-y-3">
+    <div class="flex gap-3 p-3 bg-surface-container-lowest rounded-2xl border border-stone-100">
+      <div class="skeleton w-24 h-32 flex-shrink-0"></div>
+      <div class="flex-1 space-y-2 py-1">
+        <div class="skeleton h-4 w-3/4"></div>
+        <div class="skeleton h-3 w-1/2"></div>
+        <div class="skeleton h-3 w-full"></div>
+        <div class="skeleton h-6 w-24 mt-3"></div>
+      </div>
+    </div>
+    <div class="flex gap-3 p-3 bg-surface-container-lowest rounded-2xl border border-stone-100">
+      <div class="skeleton w-24 h-32 flex-shrink-0"></div>
+      <div class="flex-1 space-y-2 py-1">
+        <div class="skeleton h-4 w-3/4"></div>
+        <div class="skeleton h-3 w-1/2"></div>
+        <div class="skeleton h-3 w-full"></div>
+        <div class="skeleton h-6 w-24 mt-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="emptyState" class="hidden text-center py-14 bg-surface-container-lowest rounded-2xl border border-stone-200 mt-4 p-6 shadow-sm">
+    <span class="material-symbols-outlined text-[64px] text-outline/30" style="font-variation-settings:'FILL' 1">search_off</span>
+    <h2 class="font-headline text-title-lg font-bold mt-2">Không tìm thấy sách phù hợp</h2>
+    <p class="text-body-md text-on-surface-variant mt-1 max-w-xs mx-auto">Thử chọn từ khóa khác hoặc bỏ chọn trong menu combobox</p>
+    <button onclick="resetFilters()" class="mt-4 inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl text-label-lg font-semibold hover:bg-primary-container transition active:scale-95 shadow-sm">
+      <span class="material-symbols-outlined text-[18px]">restart_alt</span>Đặt lại tất cả bộ lọc
+    </button>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div id="errorState" class="hidden text-center py-12 bg-surface-container-lowest rounded-2xl border border-stone-200 mt-4 p-6">
+    <span class="material-symbols-outlined text-[64px] text-error/40">cloud_off</span>
+    <p class="text-on-surface-variant mt-2 font-medium">Lỗi kết nối máy chủ</p>
+    <button onclick="fetchSearchResults()" class="mt-3 px-4 py-2 bg-primary text-on-primary rounded-xl text-label-lg font-semibold hover:bg-primary-container transition">Thử lại</button>
+  </div>
+
+  <!-- BOOK RESULTS LIST -->
+  <div id="bookList" class="hidden mt-4 space-y-3"></div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 inset-x-0 z-50 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.06)] border-t border-stone-200/60">
+  <div class="max-w-lg mx-auto h-16 flex items-center justify-around px-2">
+    <a href="index.html" class="nav-btn">
+      <span class="material-symbols-outlined text-[24px]">home</span>
+      <span>Trang chủ</span>
+    </a>
+    <a href="search.html" class="nav-btn active">
+      <span class="material-symbols-outlined text-[24px]" style="font-variation-settings:'FILL' 1">search</span>
+      <span>Tìm kiếm</span>
+    </a>
+    <a href="cart.html" class="nav-btn">
+      <span class="material-symbols-outlined text-[24px]">shopping_cart</span>
+      <span>Giỏ hàng</span>
+    </a>
+    <a href="orders.html" class="nav-btn">
+      <span class="material-symbols-outlined text-[24px]">receipt_long</span>
+      <span>Đơn hàng</span>
+    </a>
+  </div>
+</nav>
+
+<!-- BOOK DETAIL MODAL -->
+<div id="bookModal" class="fixed inset-0 z-[100] hidden">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="modalOverlay"></div>
+  <div class="absolute bottom-0 inset-x-0 max-w-lg mx-auto bg-surface-container-lowest rounded-t-3xl shadow-2xl transform transition-transform duration-300 translate-y-full" id="modalContent">
+    <div class="w-10 h-1 bg-outline/30 rounded-full mx-auto mt-3"></div>
+    <div class="p-5 pb-8 max-h-[80vh] overflow-y-auto" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const $ = (id) => document.getElementById(id);
+
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+const fullName = localStorage.getItem('fullName') || sessionStorage.getItem('fullName');
+
+if (fullName) {
+  if ($('greeting')) $('greeting').textContent = `Hi, ${fullName}`;
+  if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
+  if ($('loginLink')) $('loginLink').classList.add('hidden');
+} else {
+  if ($('loginLink')) $('loginLink').classList.remove('hidden');
+}
+
+if ($('logoutBtn')) {
+  $('logoutBtn').addEventListener('click', () => {
+    localStorage.clear(); sessionStorage.clear();
+    location.href = 'login.html';
+  });
+}
+
+function formatVND(n) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+}
+
+const COVER_COLORS = [
+  'from-amber-700/80 to-amber-900/90',
+  'from-emerald-700/80 to-emerald-900/90',
+  'from-indigo-700/80 to-indigo-900/90',
+  'from-rose-700/80 to-rose-900/90',
+  'from-violet-700/80 to-violet-900/90',
+];
+
+function bookCover(book) {
+  const colorIdx = (book.id || 0) % COVER_COLORS.length;
+  const icon = book.category?.name?.includes('Viễn tưởng') ? 'auto_fix_high' : 'menu_book';
+  return `
+    <div class="w-24 h-32 flex-shrink-0 rounded-xl bg-gradient-to-br ${COVER_COLORS[colorIdx]} flex items-center justify-center shadow-inner relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==')]"></div>
+      <span class="material-symbols-outlined text-white/90 text-[36px]" style="font-variation-settings:'FILL' 1">${icon}</span>
+    </div>`;
+}
+
+function bookCard(book, index) {
+  const author = book.author?.name || 'Không rõ';
+  const category = book.category?.name || '';
+  const inStock = book.stockQuantity > 0;
+  const delay = Math.min(index * 0.04, 0.3);
+
+  return `
+    <div class="card fade-up flex gap-3 p-3 relative" style="animation-delay: ${delay}s" onclick="showBookDetail(${book.id})">
+      ${bookCover(book)}
+      <div class="flex-1 min-w-0 flex flex-col justify-between">
+        <div>
+          <h3 class="text-title-md font-semibold text-on-surface line-clamp-1">${book.title}</h3>
+          <p class="text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5 truncate">
+            <span class="material-symbols-outlined text-[14px]">person</span>${author}
+          </p>
+          ${category ? `<span class="badge bg-surface-container text-on-surface-variant mt-1.5 self-start"><span class="material-symbols-outlined text-[12px]">category</span>${category}</span>` : ''}
+        </div>
+        
+        <div class="pt-2 flex items-center justify-between">
+          <div>
+            <span class="text-title-md text-primary font-bold block">${formatVND(book.price)}</span>
+            <span class="badge text-[11px] ${inStock ? 'bg-emerald-50 text-emerald-700' : 'bg-error-container text-on-error-container'}">
+              ${inStock ? `Còn ${book.stockQuantity}` : 'Hết hàng'}
+            </span>
+          </div>
+          
+          <button onclick="quickAddToCart(event, ${book.id}, ${inStock})" 
+                  class="h-9 px-3 rounded-xl flex items-center justify-center gap-1 text-label-sm font-semibold transition active:scale-95 ${inStock ? 'bg-primary/10 text-primary hover:bg-primary hover:text-on-primary' : 'bg-stone-100 text-stone-400 cursor-not-allowed'}"
+                  ${!inStock ? 'disabled' : ''}>
+            <span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+            <span class="hidden sm:inline">Thêm</span>
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+let rawSearchResults = [];
+let categoriesList = [];
+let authorsList = [];
+let currentSortValue = 'DEFAULT';
+let currentSortLabel = 'Mặc định';
+let searchDebounceTimer = null;
+
+// Combobox Open/Close Handlers
+function toggleCombobox(dropdownId, e) {
+  if (e) e.stopPropagation();
+  const dropdown = $(dropdownId);
+  const isOpen = dropdown.classList.contains('open');
+
+  closeAllComboboxes();
+
+  if (!isOpen) {
+    dropdown.classList.remove('hidden');
+    requestAnimationFrame(() => dropdown.classList.add('open'));
+  }
+}
+
+function closeCombobox(dropdownId) {
+  const dropdown = $(dropdownId);
+  if (dropdown) {
+    dropdown.classList.remove('open');
+    setTimeout(() => dropdown.classList.add('hidden'), 150);
+  }
+}
+
+function closeAllComboboxes() {
+  document.querySelectorAll('.combobox-dropdown').forEach(d => {
+    d.classList.remove('open');
+    d.classList.add('hidden');
+  });
+}
+
+function closeAllComboboxesOutside(e) {
+  if (!e.target.closest('.combobox-container')) {
+    closeAllComboboxes();
+  }
+}
+
+async function initFilterData() {
+  try {
+    const [catRes, authRes] = await Promise.all([
+      fetch(API + '/api/books/categories'),
+      fetch(API + '/api/books/authors')
+    ]);
+
+    if (catRes.ok) {
+      categoriesList = await catRes.json();
+      renderCatComboList(categoriesList);
+    }
+
+    if (authRes.ok) {
+      authorsList = await authRes.json();
+      renderAuthorComboList(authorsList);
+    }
+  } catch (e) {
+    console.error('Lỗi tải danh mục/tác giả:', e);
+  }
+}
+
+function renderCatComboList(list) {
+  const container = $('categoryComboList');
+  if (list.length === 0) {
+    container.innerHTML = '<p class="text-body-sm text-outline p-2 text-center">Không tìm thấy</p>';
+    return;
+  }
+  container.innerHTML = list.map(c => `
+    <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container cursor-pointer text-body-sm font-medium transition">
+      <input type="checkbox" value="${c.id}" class="cat-checkbox checkbox-custom" onchange="applyFilters()"/>
+      <span class="truncate">${c.name}</span>
+    </label>
+  `).join('');
+}
+
+function renderAuthorComboList(list) {
+  const container = $('authorComboList');
+  if (list.length === 0) {
+    container.innerHTML = '<p class="text-body-sm text-outline p-2 text-center">Không tìm thấy</p>';
+    return;
+  }
+  container.innerHTML = list.map(a => `
+    <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container cursor-pointer text-body-sm font-medium transition">
+      <input type="checkbox" value="${a.id}" class="author-checkbox checkbox-custom" onchange="applyFilters()"/>
+      <span class="truncate">${a.name}</span>
+    </label>
+  `).join('');
+}
+
+function filterCatListInCombo() {
+  const q = $('catSearchInput').value.toLowerCase().trim();
+  const filtered = categoriesList.filter(c => c.name.toLowerCase().includes(q));
+  renderCatComboList(filtered);
+}
+
+function filterAuthorListInCombo() {
+  const q = $('authorSearchInput').value.toLowerCase().trim();
+  const filtered = authorsList.filter(a => a.name.toLowerCase().includes(q));
+  renderAuthorComboList(filtered);
+}
+
+function clearAllCatCheckboxes() {
+  document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
+  applyFilters();
+}
+
+function clearAllAuthorCheckboxes() {
+  document.querySelectorAll('.author-checkbox').forEach(cb => cb.checked = false);
+  applyFilters();
+}
+
+function clearAllPriceCheckboxes() {
+  document.querySelectorAll('.price-checkbox').forEach(cb => cb.checked = false);
+  applyFilters();
+}
+
+function selectSortOption(val, label) {
+  currentSortValue = val;
+  currentSortLabel = label;
+  $('sortComboLabel').textContent = label;
+  closeCombobox('sortComboDropdown');
+  applyFilters();
+}
+
+function getSelectedCategoryIds() {
+  const checkboxes = document.querySelectorAll('.cat-checkbox:checked');
+  return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function getSelectedAuthorIds() {
+  const checkboxes = document.querySelectorAll('.author-checkbox:checked');
+  return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function getSelectedPriceRanges() {
+  const checkboxes = document.querySelectorAll('.price-checkbox:checked');
+  return Array.from(checkboxes).map(cb => ({
+    min: Number(cb.dataset.min),
+    max: Number(cb.dataset.max),
+    label: cb.dataset.label
+  }));
+}
+
+function handleSearchInput() {
+  const q = $('searchInput').value;
+  if (q.trim()) {
+    $('clearSearchBtn').classList.remove('hidden');
+  } else {
+    $('clearSearchBtn').classList.add('hidden');
+  }
+
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(() => {
+    fetchSearchResults();
+  }, 250);
+}
+
+function clearSearch() {
+  $('searchInput').value = '';
+  $('clearSearchBtn').classList.add('hidden');
+  fetchSearchResults();
+}
+
+async function fetchSearchResults() {
+  $('skeleton').classList.remove('hidden');
+  $('bookList').classList.add('hidden');
+  $('emptyState').classList.add('hidden');
+  $('errorState').classList.add('hidden');
+
+  const keyword = $('searchInput').value.trim();
+  const selectedCatIds = getSelectedCategoryIds();
+  const selectedAuthIds = getSelectedAuthorIds();
+  const selectedPriceRanges = getSelectedPriceRanges();
+
+  let url = `${API}/api/books/search?`;
+  const params = new URLSearchParams();
+  if (keyword) params.append('keyword', keyword);
+  selectedCatIds.forEach(id => params.append('categoryIds', id));
+  selectedAuthIds.forEach(id => params.append('authorIds', id));
+
+  // Minimum & Maximum price calculation for backend query
+  if (selectedPriceRanges.length > 0) {
+    const minP = Math.min(...selectedPriceRanges.map(r => r.min));
+    const maxP = Math.max(...selectedPriceRanges.map(r => r.max));
+    if (minP > 0) params.append('minPrice', minP);
+    if (maxP < 999999999) params.append('maxPrice', maxP);
+  }
+
+  try {
+    const res = await fetch(url + params.toString());
+    if (!res.ok) throw new Error('API error');
+    rawSearchResults = await res.json();
+    $('skeleton').classList.add('hidden');
+    applyClientSideFiltersAndRender();
+  } catch (e) {
+    console.error(e);
+    $('skeleton').classList.add('hidden');
+    $('errorState').classList.remove('hidden');
+  }
+}
+
+function applyFilters() {
+  updateComboboxLabelsAndStyles();
+  updateActiveFilterBadges();
+  updateResetButtonVisibility();
+  fetchSearchResults();
+}
+
+function updateComboboxLabelsAndStyles() {
+  // Category combobox label
+  const selectedCatIds = getSelectedCategoryIds();
+  const catBtn = $('categoryComboBtn');
+  const catLabel = $('categoryComboLabel');
+  if (selectedCatIds.length === 0) {
+    catLabel.textContent = 'Tất cả thể loại';
+    catBtn.classList.remove('active-filter');
+  } else if (selectedCatIds.length === 1) {
+    const cat = categoriesList.find(c => String(c.id) === String(selectedCatIds[0]));
+    catLabel.textContent = cat ? cat.name : '1 thể loại';
+    catBtn.classList.add('active-filter');
+  } else {
+    catLabel.textContent = `Thể loại (${selectedCatIds.length})`;
+    catBtn.classList.add('active-filter');
+  }
+
+  // Author combobox label
+  const selectedAuthIds = getSelectedAuthorIds();
+  const authBtn = $('authorComboBtn');
+  const authLabel = $('authorComboLabel');
+  if (selectedAuthIds.length === 0) {
+    authLabel.textContent = 'Tất cả tác giả';
+    authBtn.classList.remove('active-filter');
+  } else if (selectedAuthIds.length === 1) {
+    const auth = authorsList.find(a => String(a.id) === String(selectedAuthIds[0]));
+    authLabel.textContent = auth ? auth.name : '1 tác giả';
+    authBtn.classList.add('active-filter');
+  } else {
+    authLabel.textContent = `Tác giả (${selectedAuthIds.length})`;
+    authBtn.classList.add('active-filter');
+  }
+
+  // Price combobox label
+  const selectedPriceRanges = getSelectedPriceRanges();
+  const priceBtn = $('priceComboBtn');
+  const priceLabel = $('priceComboLabel');
+  if (selectedPriceRanges.length === 0) {
+    priceLabel.textContent = 'Tất cả mức giá';
+    priceBtn.classList.remove('active-filter');
+  } else if (selectedPriceRanges.length === 1) {
+    priceLabel.textContent = selectedPriceRanges[0].label;
+    priceBtn.classList.add('active-filter');
+  } else {
+    priceLabel.textContent = `Giá tiền (${selectedPriceRanges.length})`;
+    priceBtn.classList.add('active-filter');
+  }
+
+  // Sort combobox style
+  const sortBtn = $('sortComboBtn');
+  if (currentSortValue !== 'DEFAULT') {
+    sortBtn.classList.add('active-filter');
+  } else {
+    sortBtn.classList.remove('active-filter');
+  }
+}
+
+function updateActiveFilterBadges() {
+  const selectedCatIds = getSelectedCategoryIds();
+  const selectedAuthIds = getSelectedAuthorIds();
+  const selectedPriceRanges = getSelectedPriceRanges();
+
+  const tagsBox = $('activeFilterTags');
+  let tagsHtml = '';
+
+  selectedCatIds.forEach(id => {
+    const cat = categoriesList.find(c => String(c.id) === String(id));
+    if (cat) {
+      tagsHtml += `
+        <span class="badge bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 cursor-pointer" onclick="uncheckCategory('${cat.id}')">
+          Thể loại: ${cat.name} <span class="material-symbols-outlined text-[14px]">close</span>
+        </span>`;
+    }
+  });
+
+  selectedAuthIds.forEach(id => {
+    const auth = authorsList.find(a => String(a.id) === String(id));
+    if (auth) {
+      tagsHtml += `
+        <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 cursor-pointer" onclick="uncheckAuthor('${auth.id}')">
+          Tác giả: ${auth.name} <span class="material-symbols-outlined text-[14px]">close</span>
+        </span>`;
+    }
+  });
+
+  selectedPriceRanges.forEach(r => {
+    tagsHtml += `
+      <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 cursor-pointer" onclick="uncheckPriceRange(${r.min}, ${r.max})">
+        Giá: ${r.label} <span class="material-symbols-outlined text-[14px]">close</span>
+      </span>`;
+  });
+
+  tagsBox.innerHTML = tagsHtml;
+}
+
+function uncheckCategory(id) {
+  const cb = document.querySelector(`.cat-checkbox[value="${id}"]`);
+  if (cb) cb.checked = false;
+  applyFilters();
+}
+
+function uncheckAuthor(id) {
+  const cb = document.querySelector(`.author-checkbox[value="${id}"]`);
+  if (cb) cb.checked = false;
+  applyFilters();
+}
+
+function uncheckPriceRange(min, max) {
+  const cb = document.querySelector(`.price-checkbox[data-min="${min}"][data-max="${max}"]`);
+  if (cb) cb.checked = false;
+  applyFilters();
+}
+
+function updateResetButtonVisibility() {
+  const keyword = $('searchInput').value.trim();
+  const selectedCatIds = getSelectedCategoryIds();
+  const selectedAuthIds = getSelectedAuthorIds();
+  const selectedPriceRanges = getSelectedPriceRanges();
+
+  const isFiltered = keyword !== '' || selectedCatIds.length > 0 || selectedAuthIds.length > 0 || selectedPriceRanges.length > 0 || currentSortValue !== 'DEFAULT';
+  if (isFiltered) {
+    $('resetFilterBtn').classList.remove('hidden');
+  } else {
+    $('resetFilterBtn').classList.add('hidden');
+  }
+}
+
+function resetFilters() {
+  $('searchInput').value = '';
+  $('clearSearchBtn').classList.add('hidden');
+  document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.author-checkbox').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.price-checkbox').forEach(cb => cb.checked = false);
+  selectSortOption('DEFAULT', 'Mặc định');
+  $('resetFilterBtn').classList.add('hidden');
+  applyFilters();
+}
+
+function applyClientSideFiltersAndRender() {
+  let list = [...rawSearchResults];
+
+  // Category filter
+  const selectedCatIds = getSelectedCategoryIds();
+  if (selectedCatIds.length > 0) {
+    list = list.filter(b => b.category && selectedCatIds.includes(String(b.category.id)));
+  }
+
+  // Author filter
+  const selectedAuthIds = getSelectedAuthorIds();
+  if (selectedAuthIds.length > 0) {
+    list = list.filter(b => b.author && selectedAuthIds.includes(String(b.author.id)));
+  }
+
+  // Price range checkbox filter
+  const selectedPriceRanges = getSelectedPriceRanges();
+  if (selectedPriceRanges.length > 0) {
+    list = list.filter(b => {
+      const p = b.price;
+      return selectedPriceRanges.some(r => p >= r.min && p <= r.max);
+    });
+  }
+
+  // Sort filter
+  if (currentSortValue === 'PRICE_ASC') {
+    list.sort((a, b) => a.price - b.price);
+  } else if (currentSortValue === 'PRICE_DESC') {
+    list.sort((a, b) => b.price - a.price);
+  } else if (currentSortValue === 'NAME_ASC') {
+    list.sort((a, b) => a.title.localeCompare(b.title, 'vi'));
+  }
+
+  $('resultCountBadge').textContent = list.length + ' cuốn';
+
+  if (list.length === 0) {
+    $('bookList').classList.add('hidden');
+    $('emptyState').classList.remove('hidden');
+  } else {
+    $('emptyState').classList.add('hidden');
+    $('bookList').innerHTML = list.map((book, idx) => bookCard(book, idx)).join('');
+    $('bookList').classList.remove('hidden');
+  }
+
+  updateResetButtonVisibility();
+}
+
+// Book detail modal
+function showBookDetail(id) {
+  const book = rawSearchResults.find(b => b.id === id);
+  if (!book) return;
+
+  const author = book.author?.name || 'Không rõ';
+  const authorBio = book.author?.bio || '';
+  const category = book.category?.name || 'Chưa phân loại';
+  const inStock = book.stockQuantity > 0;
+  const colorIdx = (book.id || 0) % COVER_COLORS.length;
+  const icon = book.category?.name?.includes('Viễn tưởng') ? 'auto_fix_high' : 'menu_book';
+
+  $('modalBody').innerHTML = `
+    <div class="flex flex-col items-center text-center mb-5">
+      <div class="w-36 h-48 rounded-xl bg-gradient-to-br ${COVER_COLORS[colorIdx]} flex items-center justify-center shadow-lg relative overflow-hidden mb-4">
+        <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==')]"></div>
+        <span class="material-symbols-outlined text-white/90 text-[56px]" style="font-variation-settings:'FILL' 1">${icon}</span>
+      </div>
+      <h2 class="font-headline text-headline-lg font-bold">${book.title}</h2>
+      <p class="text-body-md text-on-surface-variant mt-1">Tác giả: <strong>${author}</strong></p>
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 mb-5">
+      <div class="bg-surface-container rounded-xl p-3 text-center">
+        <span class="material-symbols-outlined text-primary text-[20px] mb-1" style="font-variation-settings:'FILL' 1">payments</span>
+        <p class="text-title-md text-primary font-bold">${formatVND(book.price)}</p>
+        <p class="text-label-sm text-outline">Giá bán</p>
+      </div>
+      <div class="bg-surface-container rounded-xl p-3 text-center">
+        <span class="material-symbols-outlined text-tertiary text-[20px] mb-1" style="font-variation-settings:'FILL' 1">inventory_2</span>
+        <p class="text-title-md font-bold">${book.stockQuantity}</p>
+        <p class="text-label-sm text-outline">Tồn kho</p>
+      </div>
+      <div class="bg-surface-container rounded-xl p-3 text-center">
+        <span class="material-symbols-outlined text-[20px] mb-1" style="font-variation-settings:'FILL' 1;color:#805200">category</span>
+        <p class="text-body-sm font-semibold truncate">${category}</p>
+        <p class="text-label-sm text-outline">Thể loại</p>
+      </div>
+    </div>
+
+    ${book.description ? `
+    <div class="mb-5">
+      <h3 class="text-label-lg font-semibold text-on-surface mb-1.5 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[18px] text-primary">description</span>Giới thiệu sách
+      </h3>
+      <p class="text-body-md text-on-surface-variant leading-relaxed">${book.description}</p>
+    </div>` : ''}
+
+    ${authorBio ? `
+    <div class="mb-5 bg-surface-container rounded-xl p-4">
+      <h3 class="text-label-lg font-semibold text-on-surface mb-1.5 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[18px] text-primary">person</span>Về tác giả
+      </h3>
+      <p class="text-body-sm text-on-surface-variant">${authorBio}</p>
+    </div>` : ''}
+
+    <button id="addCartBtn" class="w-full py-3.5 rounded-xl text-label-lg font-semibold flex items-center justify-center gap-2 transition active:scale-[0.98] ${inStock ? 'bg-primary text-on-primary hover:bg-primary-container shadow-md' : 'bg-surface-container text-outline cursor-not-allowed'}" ${!inStock ? 'disabled' : ''} ${inStock && token ? `onclick="addToCart(${book.id})"` : !token ? `onclick="location.href='login.html'"` : ''}>
+      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">${inStock ? 'add_shopping_cart' : 'remove_shopping_cart'}</span>
+      <span>${inStock ? (token ? 'Thêm vào giỏ hàng' : 'Đăng nhập để mua') : 'Hết hàng'}</span>
+    </button>
+  `;
+
+  const modal = $('bookModal');
+  const content = $('modalContent');
+  modal.classList.remove('hidden');
+  requestAnimationFrame(() => {
+    content.classList.remove('translate-y-full');
+    content.classList.add('translate-y-0');
+  });
+}
+
+function closeModal() {
+  const content = $('modalContent');
+  content.classList.remove('translate-y-0');
+  content.classList.add('translate-y-full');
+  setTimeout(() => $('bookModal').classList.add('hidden'), 300);
+}
+
+$('modalOverlay').addEventListener('click', closeModal);
+
+async function quickAddToCart(e, bookId, inStock) {
+  e.stopPropagation();
+  if (!inStock) return;
+  if (!token) { location.href = 'login.html'; return; }
+
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>`;
+
+  try {
+    const res = await fetch(API + '/api/cart', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookId: bookId, quantity: 1 })
+    });
+    if (res.ok) {
+      btn.className = "h-9 px-3 rounded-xl flex items-center justify-center gap-1 text-label-sm font-semibold bg-emerald-600 text-white transition";
+      btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">check</span><span class="hidden sm:inline">Đã thêm</span>`;
+      setTimeout(() => {
+        btn.className = "h-9 px-3 rounded-xl flex items-center justify-center gap-1 text-label-sm font-semibold transition active:scale-95 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary";
+        btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span><span class="hidden sm:inline">Thêm</span>`;
+        btn.disabled = false;
+      }, 1500);
+    } else {
+      const d = await res.json();
+      alert(d.message || 'Không thể thêm vào giỏ');
+      btn.disabled = false;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span><span class="hidden sm:inline">Thêm</span>`;
+    }
+  } catch (err) {
+    alert('Lỗi kết nối');
+    btn.disabled = false;
+    btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span><span class="hidden sm:inline">Thêm</span>`;
+  }
+}
+
+async function addToCart(bookId) {
+  if (!token) { location.href = 'login.html'; return; }
+  const btn = document.getElementById('addCartBtn');
+  btn.disabled = true;
+  btn.querySelector('span:last-child').textContent = 'Đang thêm...';
+  try {
+    const res = await fetch(API + '/api/cart', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookId: bookId, quantity: 1 })
+    });
+    if (res.ok) {
+      btn.querySelector('span:last-child').textContent = '✓ Đã thêm vào giỏ!';
+      btn.classList.remove('bg-primary');
+      btn.classList.add('bg-emerald-600');
+      setTimeout(() => {
+        btn.querySelector('span:last-child').textContent = 'Thêm vào giỏ hàng';
+        btn.classList.remove('bg-emerald-600');
+        btn.classList.add('bg-primary');
+        btn.disabled = false;
+      }, 1500);
+    } else {
+      const d = await res.json();
+      alert(d.message || 'Không thể thêm vào giỏ');
+      btn.disabled = false;
+      btn.querySelector('span:last-child').textContent = 'Thêm vào giỏ hàng';
+    }
+  } catch (e) {
+    alert('Lỗi kết nối');
+    btn.disabled = false;
+    btn.querySelector('span:last-child').textContent = 'Thêm vào giỏ hàng';
+  }
+}
+
+// Initial page load
+(async function init() {
+  await initFilterData();
+  
+  // Check URL query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const qParam = urlParams.get('q') || urlParams.get('keyword');
+  const catParam = urlParams.get('categoryId');
+
+  if (qParam) {
+    $('searchInput').value = qParam;
+    $('clearSearchBtn').classList.remove('hidden');
+  }
+  if (catParam) {
+    const cb = document.querySelector(`.cat-checkbox[value="${catParam}"]`);
+    if (cb) cb.checked = true;
+    updateComboboxLabelsAndStyles();
+  }
+
+  fetchSearchResults();
+})();
+</script>
+</body>
+</html>

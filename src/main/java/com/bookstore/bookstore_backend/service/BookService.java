@@ -1,8 +1,9 @@
 package com.bookstore.bookstore_backend.service;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import com.bookstore.bookstore_backend.exception.ResourceNotFoundException;
 import com.bookstore.bookstore_backend.repository.AuthorRepository;
 import com.bookstore.bookstore_backend.repository.BookRepository;
 import com.bookstore.bookstore_backend.repository.CategoryRepository;
+import com.bookstore.bookstore_backend.specification.BookSpecification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -85,13 +87,18 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public List<BookResponse> searchBooks(String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return getAllBooks();
-        }
+        return searchBooks(keyword, null, null, null, null);
+    }
 
-        return bookRepository.findByTitleContainingIgnoreCase(keyword.trim())
+    @Transactional(readOnly = true)
+    public List<BookResponse> searchBooks(String keyword, List<Long> categoryIds, List<Long> authorIds, BigDecimal minPrice, BigDecimal maxPrice) {
+        Specification<Book> spec = BookSpecification.filterBooks(keyword, categoryIds, authorIds, minPrice, maxPrice);
+        return bookRepository.findAll(spec)
                 .stream()
                 .map(BookResponse::fromEntity)
                 .toList();
     }
 }
+
+
+

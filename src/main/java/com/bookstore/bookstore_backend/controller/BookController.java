@@ -41,9 +41,6 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
 
-    /**
-     * API phân trang chuẩn Spring Data Pageable cho danh sách sách.
-     */
     @GetMapping("/paged")
     public ResponseEntity<Page<BookResponse>> getBooksPaged(
             @RequestParam(defaultValue = "0") int page,

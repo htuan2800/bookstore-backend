@@ -1,0 +1,228 @@
+2026-10-09T03:08:07.693+07:00  INFO 30328 --- [bookstore-backend] [main] c.b.b.BookstoreBackendApplication        : Starting BookstoreBackendApplication using Java 25.0.1 with PID 30328 (C:\ProjectVS\bookstore\bookstore-backend\target\classes started by huynh in C:\ProjectVS\bookstore\bookstore-backend)
+2026-10-09T03:08:07.695+07:00  INFO 30328 --- [bookstore-backend] [main] c.b.b.BookstoreBackendApplication        : The following 1 profile is active: "dev"
+2026-10-09T03:08:08.407+07:00  INFO 30328 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09T03:08:08.408+07:00  INFO 30328 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-09T03:08:08.515+07:00  INFO 30328 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 99 ms. Found 6 JPA repository interfaces.
+2026-10-09T03:08:08.551+07:00  INFO 30328 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09T03:08:08.552+07:00  INFO 30328 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-09T03:08:08.564+07:00  INFO 30328 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.AuthorRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T03:08:08.564+07:00  INFO 30328 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.BookRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T03:08:08.565+07:00  INFO 30328 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.CartItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T03:08:08.565+07:00  INFO 30328 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.CategoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T03:08:08.566+07:00  INFO 30328 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T03:08:08.566+07:00  INFO 30328 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T03:08:08.566+07:00  INFO 30328 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+2026-10-09T03:08:09.050+07:00  INFO 30328 --- [bookstore-backend] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-09T03:08:09.062+07:00  INFO 30328 --- [bookstore-backend] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-09T03:08:09.063+07:00  INFO 30328 --- [bookstore-backend] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-09T03:08:09.117+07:00  INFO 30328 --- [bookstore-backend] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1388 ms
+2026-10-09T03:08:09.282+07:00  INFO 30328 --- [bookstore-backend] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-09T03:08:09.322+07:00  INFO 30328 --- [bookstore-backend] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-09T03:08:09.639+07:00  INFO 30328 --- [bookstore-backend] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-09T03:08:09.664+07:00  INFO 30328 --- [bookstore-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-09T03:08:09.818+07:00  INFO 30328 --- [bookstore-backend] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7fb5368e
+2026-10-09T03:08:09.820+07:00  INFO 30328 --- [bookstore-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-09T03:08:09.894+07:00  INFO 30328 --- [bookstore-backend] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3310/bookstore?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.46
+	Default catalog/schema: bookstore/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-09T03:08:10.665+07:00  INFO 30328 --- [bookstore-backend] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-09T03:08:10.822+07:00  INFO 30328 --- [bookstore-backend] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09T03:08:10.868+07:00  INFO 30328 --- [bookstore-backend] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-09T03:08:11.204+07:00  INFO 30328 --- [bookstore-backend] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-10-09T03:08:11.519+07:00  WARN 30328 --- [bookstore-backend] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-09T03:08:11.684+07:00 DEBUG 30328 --- [bookstore-backend] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtAuthFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2026-10-09T03:08:11.721+07:00  INFO 30328 --- [bookstore-backend] [main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-10-09T03:08:12.145+07:00  INFO 30328 --- [bookstore-backend] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-09T03:08:12.227+07:00  INFO 30328 --- [bookstore-backend] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-09T03:08:12.236+07:00  INFO 30328 --- [bookstore-backend] [main] c.b.b.BookstoreBackendApplication        : Started BookstoreBackendApplication in 4.86 seconds (process running for 5.16)
+2026-10-09T03:08:12.282+07:00  WARN 30328 --- [bookstore-backend] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-10-09T03:08:12.283+07:00  WARN 30328 --- [bookstore-backend] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-10-09T03:11:51.015+07:00  INFO 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-09T03:11:51.015+07:00  INFO 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-09T03:11:51.017+07:00  INFO 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-10-09T03:11:51.032+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/index.html
+2026-10-09T03:11:51.048+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.054+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/index.html
+2026-10-09T03:11:51.134+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-ui.css
+2026-10-09T03:11:51.136+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.137+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-ui.css
+2026-10-09T03:11:51.140+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/index.css
+2026-10-09T03:11:51.141+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.143+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-ui-bundle.js
+2026-10-09T03:11:51.143+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/index.css
+2026-10-09T03:11:51.143+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-ui-standalone-preset.js
+2026-10-09T03:11:51.143+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-initializer.js
+2026-10-09T03:11:51.143+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.143+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-5] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.144+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-ui-bundle.js
+2026-10-09T03:11:51.144+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.144+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-ui-standalone-preset.js
+2026-10-09T03:11:51.145+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-initializer.js
+2026-10-09T03:11:51.404+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /v3/api-docs/swagger-config
+2026-10-09T03:11:51.405+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.406+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /v3/api-docs/swagger-config
+2026-10-09T03:11:51.515+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/favicon-32x32.png
+2026-10-09T03:11:51.516+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.517+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/favicon-32x32.png
+2026-10-09T03:11:51.519+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /v3/api-docs
+2026-10-09T03:11:51.521+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:11:51.521+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /v3/api-docs
+2026-10-09T03:11:51.955+07:00  INFO 30328 --- [bookstore-backend] [http-nio-8080-exec-9] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 420 ms
+2026-10-09T03:12:38.552+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing POST /api/cart
+2026-10-09T03:12:38.558+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:12:38.564+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.s.w.a.Http403ForbiddenEntryPoint     : Pre-authenticated entry point called. Rejecting access
+2026-10-09T03:12:38.572+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing GET /error
+2026-10-09T03:12:38.573+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:12:38.574+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.s.w.a.Http403ForbiddenEntryPoint     : Pre-authenticated entry point called. Rejecting access
+2026-10-09T03:13:12.587+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /api/books
+2026-10-09T03:13:12.588+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:13:12.588+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /api/books
+2026-10-09T03:28:10.525+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-10-09T03:28:10.526+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:28:10.527+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-10-09T03:28:10.761+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.s.a.dao.DaoAuthenticationProvider    : Failed to authenticate since password does not match stored value
+2026-10-09T03:28:10.762+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.s.authentication.ProviderManager     : Authentication failed with provider DaoAuthenticationProvider since Bad credentials
+2026-10-09T03:28:36.257+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-10-09T03:28:36.258+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:28:36.260+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-10-09T03:28:36.349+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.s.a.dao.DaoAuthenticationProvider    : Authenticated user
+2026-10-09T03:42:57.430+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-10-09T03:42:57.432+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:42:57.434+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-10-09T03:42:57.515+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.s.a.dao.DaoAuthenticationProvider    : Authenticated user
+2026-10-09T03:44:59.440+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing POST /api/admin/books
+2026-10-09T03:44:59.504+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Secured POST /api/admin/books
+2026-10-09T03:48:41.456+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-10-09T03:48:41.457+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:48:41.457+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-10-09T03:48:41.536+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.s.a.dao.DaoAuthenticationProvider    : Authenticated user
+2026-10-09T03:50:20.247+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing POST /api/admin/books
+2026-10-09T03:50:20.258+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.s.w.access.AccessDeniedHandlerImpl   : Responding with 403 status code
+2026-10-09T03:50:20.259+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /error
+2026-10-09T03:50:20.260+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T03:50:20.260+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.s.w.a.Http403ForbiddenEntryPoint     : Pre-authenticated entry point called. Rejecting access
+2026-10-09T03:58:24.684+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-10-09T03:58:24.693+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-10-09T03:58:24.793+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.s.a.dao.DaoAuthenticationProvider    : Failed to authenticate since password does not match stored value
+2026-10-09T03:58:24.793+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.s.authentication.ProviderManager     : Authentication failed with provider DaoAuthenticationProvider since Bad credentials
+2026-10-09T04:01:34.279+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/register
+2026-10-09T04:01:34.286+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/register
+2026-10-09T04:01:52.371+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/register
+2026-10-09T04:01:52.380+07:00 DEBUG 30328 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/register
+2026-10-09T04:33:12.252+07:00  INFO 30328 --- [bookstore-backend] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-09T04:33:12.262+07:00  INFO 30328 --- [bookstore-backend] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-10-09T04:33:12.290+07:00  INFO 30328 --- [bookstore-backend] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09T04:33:12.295+07:00  INFO 30328 --- [bookstore-backend] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-09T04:33:12.297+07:00  INFO 30328 --- [bookstore-backend] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-10-09T04:39:19.060+07:00  INFO 13408 --- [bookstore-backend] [main] c.b.b.BookstoreBackendApplication        : Starting BookstoreBackendApplication using Java 25.0.1 with PID 13408 (C:\ProjectVS\bookstore\bookstore-backend\target\classes started by huynh in C:\ProjectVS\bookstore\bookstore-backend)
+2026-10-09T04:39:19.063+07:00  INFO 13408 --- [bookstore-backend] [main] c.b.b.BookstoreBackendApplication        : The following 1 profile is active: "dev"
+2026-10-09T04:39:19.794+07:00  INFO 13408 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09T04:39:19.796+07:00  INFO 13408 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-09T04:39:19.897+07:00  INFO 13408 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 95 ms. Found 6 JPA repository interfaces.
+2026-10-09T04:39:19.932+07:00  INFO 13408 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09T04:39:19.933+07:00  INFO 13408 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-09T04:39:19.945+07:00  INFO 13408 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.AuthorRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T04:39:19.946+07:00  INFO 13408 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.BookRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T04:39:19.947+07:00  INFO 13408 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.CartItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T04:39:19.947+07:00  INFO 13408 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.CategoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T04:39:19.947+07:00  INFO 13408 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T04:39:19.947+07:00  INFO 13408 --- [bookstore-backend] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bookstore.bookstore_backend.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09T04:39:19.948+07:00  INFO 13408 --- [bookstore-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+2026-10-09T04:39:20.393+07:00  INFO 13408 --- [bookstore-backend] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-09T04:39:20.403+07:00  INFO 13408 --- [bookstore-backend] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-09T04:39:20.404+07:00  INFO 13408 --- [bookstore-backend] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-09T04:39:20.456+07:00  INFO 13408 --- [bookstore-backend] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1356 ms
+2026-10-09T04:39:20.611+07:00  INFO 13408 --- [bookstore-backend] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-09T04:39:20.648+07:00  INFO 13408 --- [bookstore-backend] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-10-09T04:39:20.952+07:00  INFO 13408 --- [bookstore-backend] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-09T04:39:20.978+07:00  INFO 13408 --- [bookstore-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-09T04:39:21.096+07:00  INFO 13408 --- [bookstore-backend] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@16890f00
+2026-10-09T04:39:21.097+07:00  INFO 13408 --- [bookstore-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-09T04:39:21.158+07:00  INFO 13408 --- [bookstore-backend] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3310/bookstore?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.46
+	Default catalog/schema: bookstore/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-09T04:39:21.921+07:00  INFO 13408 --- [bookstore-backend] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-09T04:39:22.028+07:00  INFO 13408 --- [bookstore-backend] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09T04:39:22.074+07:00  INFO 13408 --- [bookstore-backend] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-09T04:39:22.367+07:00  INFO 13408 --- [bookstore-backend] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-10-09T04:39:22.678+07:00  WARN 13408 --- [bookstore-backend] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-09T04:39:22.841+07:00 DEBUG 13408 --- [bookstore-backend] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtAuthFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2026-10-09T04:39:22.875+07:00  INFO 13408 --- [bookstore-backend] [main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-10-09T04:39:23.291+07:00  INFO 13408 --- [bookstore-backend] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-09T04:39:23.363+07:00  INFO 13408 --- [bookstore-backend] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-09T04:39:23.372+07:00  INFO 13408 --- [bookstore-backend] [main] c.b.b.BookstoreBackendApplication        : Started BookstoreBackendApplication in 4.639 seconds (process running for 4.934)
+2026-10-09T04:39:23.422+07:00  WARN 13408 --- [bookstore-backend] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-10-09T04:39:23.422+07:00  WARN 13408 --- [bookstore-backend] [main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-10-09T04:39:27.784+07:00  INFO 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-09T04:39:27.785+07:00  INFO 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-09T04:39:27.786+07:00  INFO 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-10-09T04:39:27.805+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/index.html
+2026-10-09T04:39:27.821+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:27.826+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/index.html
+2026-10-09T04:39:27.908+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-ui.css
+2026-10-09T04:39:27.909+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/index.css
+2026-10-09T04:39:27.909+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-ui-bundle.js
+2026-10-09T04:39:27.910+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:27.910+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:27.910+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-ui-standalone-preset.js
+2026-10-09T04:39:27.910+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:27.910+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/swagger-initializer.js
+2026-10-09T04:39:27.910+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-ui.css
+2026-10-09T04:39:27.911+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/index.css
+2026-10-09T04:39:27.911+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-ui-bundle.js
+2026-10-09T04:39:27.911+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-5] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:27.911+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:27.911+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-initializer.js
+2026-10-09T04:39:27.911+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/swagger-ui-standalone-preset.js
+2026-10-09T04:39:28.119+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /v3/api-docs/swagger-config
+2026-10-09T04:39:28.121+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:28.122+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /v3/api-docs/swagger-config
+2026-10-09T04:39:28.247+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/favicon-32x32.png
+2026-10-09T04:39:28.248+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:28.249+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/favicon-32x32.png
+2026-10-09T04:39:28.285+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /v3/api-docs
+2026-10-09T04:39:28.285+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /swagger-ui/favicon-32x32.png
+2026-10-09T04:39:28.286+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:28.286+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:28.286+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /v3/api-docs
+2026-10-09T04:39:28.286+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /swagger-ui/favicon-32x32.png
+2026-10-09T04:39:28.677+07:00  INFO 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 380 ms
+2026-10-09T04:39:47.026+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-10-09T04:39:47.033+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:39:47.034+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-10-09T04:39:47.588+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.s.a.dao.DaoAuthenticationProvider    : Authenticated user
+2026-10-09T04:41:25.638+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing POST /api/admin/books
+2026-10-09T04:41:25.701+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured POST /api/admin/books
+2026-10-09T04:42:04.552+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing POST /api/admin/books
+2026-10-09T04:42:04.558+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Secured POST /api/admin/books
+2026-10-09T04:47:35.364+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing POST /api/orders
+2026-10-09T04:47:35.372+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured POST /api/orders
+2026-10-09T04:48:25.664+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2026-10-09T04:48:25.665+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-10-09T04:48:25.666+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2026-10-09T04:48:25.740+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-8] o.s.s.a.dao.DaoAuthenticationProvider    : Authenticated user
+2026-10-09T04:48:45.998+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/orders
+2026-10-09T04:48:46.006+07:00 DEBUG 13408 --- [bookstore-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/orders
+2026-10-09T04:51:09.495+07:00  INFO 13408 --- [bookstore-backend] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-09T04:51:09.503+07:00  INFO 13408 --- [bookstore-backend] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-10-09T04:51:09.517+07:00  INFO 13408 --- [bookstore-backend] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09T04:51:09.520+07:00  INFO 13408 --- [bookstore-backend] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-09T04:51:09.526+07:00  INFO 13408 --- [bookstore-backend] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

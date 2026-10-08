@@ -32,63 +32,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
-            // REST API dùng JWT nên không dùng CSRF
             .csrf(csrf -> csrf.disable())
-
-            // Không dùng session
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-
-            // CORS
             .cors(cors -> {})
-
             .authorizeHttpRequests(auth -> auth
-
-                // =========================
-                // PUBLIC AUTH ENDPOINTS
-                // =========================
                 .requestMatchers(
                     HttpMethod.POST,
                     "/api/auth/register",
                     "/api/auth/login"
                 ).permitAll()
-
-                // =========================
-                // PUBLIC HEALTH CHECK
-                // =========================
                 .requestMatchers(
                     HttpMethod.GET,
                     "/api/hello"
                 ).permitAll()
-
-                // =========================
-                // PUBLIC BOOK BROWSING
-                // =========================
                 .requestMatchers(
                     HttpMethod.GET,
                     "/api/books",
                     "/api/books/**"
                 ).permitAll()
-
-                // =========================
-                // SWAGGER
-                // =========================
                 .requestMatchers(
                     "/swagger-ui/**",
                     "/v3/api-docs/**"
                 ).permitAll()
-
-                // =========================
-                // ACTUATOR / HEALTH CHECK
-                // =========================
                 .requestMatchers("/actuator/**").permitAll()
-
-                // =========================
-                // STATIC FILES
-                // =========================
                 .requestMatchers(
                     "/",
                     "/*.html",
@@ -96,26 +65,15 @@ public class SecurityConfig {
                     "/js/**",
                     "/images/**"
                 ).permitAll()
-
-                // =========================
-                // ADMIN
-                // =========================
                 .requestMatchers("/api/admin/**")
                 .hasRole("ADMIN")
-
-                // =========================
-                // EVERYTHING ELSE
-                // =========================
                 .anyRequest()
                 .authenticated()             
             )
-
-            // JWT filter
             .addFilterBefore(
                 jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter.class
             );
-
         return http.build();
     }
 

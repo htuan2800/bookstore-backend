@@ -3,6 +3,10 @@ package com.bookstore.bookstore_backend.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,11 @@ public class BookService {
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
 
+    /**
+     * Lấy danh sách toàn bộ sách có cache Redis.
+     * Khi khách hàng truy cập nhiều, dữ liệu được lấy thẳng từ Redis với độ trễ thấp (~2-3ms).
+     */
+    @Cacheable(value = "books", key = "'all'")
     @Transactional(readOnly = true)
     public List<BookResponse> getAllBooks() {
         return bookRepository.findByIsDeletedFalse()
@@ -36,23 +45,49 @@ public class BookService {
                 .toList();
     }
 
+    /**
+     * Phân trang tiêu chuẩn với Pageable (Tối ưu tài nguyên cho tập dữ liệu lớn).
+     */
+    @Transactional(readOnly = true)
+    public Page<BookResponse> getBooksPaged(Pageable pageable) {
+        return bookRepository.findByIsDeletedFalse(pageable)
+                .map(BookResponse::fromEntity);
+    }
+
+    /**
+     * Lấy chi tiết sách theo ID có cache Redis.
+     */
+    @Cacheable(value = "book_detail", key = "#id")
+    @Transactional(readOnly = true)
     public Book findById(Long id) {
         return bookRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy sách với ID: " + id));
     }
 
+    /**
+     * Thêm sách mới: Tự động xóa cache để dữ liệu không bị cũ (Cache Eviction).
+     */
+    @CacheEvict(value = {"books", "book_detail"}, allEntries = true)
     public Book create(BookRequest req) {
         Book book = new Book();
         mapRequestToEntity(req, book);
         return bookRepository.save(book);
     }
 
+    /**
+     * Cập nhật sách: Xóa cache cũ.
+     */
+    @CacheEvict(value = {"books", "book_detail"}, allEntries = true)
     public Book update(Long id, BookRequest req) {
         Book book = findById(id);
         mapRequestToEntity(req, book);
         return bookRepository.save(book);
     }
 
+    /**
+     * Xóa mềm sách: Xóa cache cũ.
+     */
+    @CacheEvict(value = {"books", "book_detail"}, allEntries = true)
     public void delete(Long id) {
         Book book = findById(id);
         book.setDeleted(true);
@@ -98,7 +133,17 @@ public class BookService {
                 .map(BookResponse::fromEntity)
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public Page<BookResponse> searchBooksPaged(
+            String keyword,
+            List<Long> categoryIds,
+            List<Long> authorIds,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            Pageable pageable) {
+        Specification<Book> spec = BookSpecification.filterBooks(keyword, categoryIds, authorIds, minPrice, maxPrice);
+        return bookRepository.findAll(spec, pageable)
+                .map(BookResponse::fromEntity);
+    }
 }
-
-
-

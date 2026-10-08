@@ -8,7 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "books")
+@Table(name = "books", indexes = {
+    @Index(name = "idx_books_deleted_category_price", columnList = "is_deleted, category_id, price"),
+    @Index(name = "idx_books_deleted_title", columnList = "is_deleted, title")
+})
 @Getter
 @Setter
 public class Book {

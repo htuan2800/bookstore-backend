@@ -46,7 +46,9 @@ CREATE TABLE IF NOT EXISTS books (
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    INDEX idx_books_deleted_category_price (is_deleted, category_id, price),
+    INDEX idx_books_deleted_title (is_deleted, title)
 );
 
 -- 5. Bảng Giỏ hàng

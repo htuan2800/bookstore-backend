@@ -20,6 +20,18 @@ services:
       timeout: 5s
       retries: 10
 
+  redis-cache:
+    image: redis:8-alpine
+    container_name: redis-cache
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   book-store-api:
     build: .
     container_name: book-store-api
@@ -27,6 +39,8 @@ services:
     depends_on:
       mysql-db:
         condition: service_healthy  # Chỉ khởi động Spring Boot khi MySQL đã sẵn sàng
+      redis-cache:
+        condition: service_healthy  # Khởi động khi Redis đã sẵn sàng
     ports:
       - "8080:8080"
     environment:
@@ -34,6 +48,8 @@ services:
       DB_URL: jdbc:mysql://mysql-db:3306/bookstore?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis-cache
+      REDIS_PORT: 6379
 
 volumes:
   mysql_data:

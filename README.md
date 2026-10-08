@@ -13,10 +13,11 @@ Dự án xây dựng hệ thống RESTful API phục vụ bài toán thương m�
 
 ### Các công nghệ và thư viện cốt lõi
 * **Ngôn ngữ & Nền tảng:** Java 25 (LTS), Spring Boot 4.x
-* **Data Access:** Spring Data JPA, Hibernate ORM, MySQL 8.0, H2 Database (phục vụ Testing)
+* **Data Access & Tối ưu hóa (Tầng 3):** Spring Data JPA, Hibernate ORM, MySQL 8.0, `@EntityGraph` (chống N+1 Query), Composite Index (Chỉ mục tổ hợp), Spring Data `Pageable`
+* **Bộ nhớ đệm (Caching):** Redis 7 (TTL 10 phút, Serialization JSON Jackson, Fail-safe Graceful Degradation)
 * **Bảo mật:** Spring Security, JSON Web Token (Stateless JWT), Password Hashing (BCrypt)
 * **Xác thực dữ liệu:** Bean Validation (`jakarta.validation`)
-* **Kiểm thử tự động:** JUnit 5, Mockito, `@WebMvcTest` (Slice Test), `@SpringBootTest` (Integration Test)
+* **Kiểm thử tự động:** JUnit 5, Mockito, `@WebMvcTest` (Slice Test), `@SpringBootTest` (Integration Test), H2 In-Memory DB
 * **Tài liệu hóa API:** SpringDoc OpenAPI 3, Swagger UI
 * **DevOps & Tự động hóa:** Docker, Docker Compose, GitHub Actions (CI Pipeline)
 
@@ -27,7 +28,7 @@ Dự án xây dựng hệ thống RESTful API phục vụ bài toán thương m�
 ### Cách 1: Khởi chạy bằng Docker Compose (Khuyến nghị — 1 lệnh duy nhất)
 Yêu cầu: Máy đã cài đặt Docker và Docker Compose.
 
-1. Khởi động toàn bộ hệ thống (gồm MySQL 8 và Spring Boot API):
+1. Khởi động toàn bộ hệ thống (gồm MySQL 8, Redis 7 và Spring Boot API):
    ```bash
    docker compose up --build -d
    ```

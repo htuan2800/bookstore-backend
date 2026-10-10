@@ -32,6 +32,18 @@ public class BookService {
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
 
+    @jakarta.annotation.PostConstruct
+    public void onInit() {
+        org.slf4j.LoggerFactory.getLogger(BookService.class)
+            .info(">>> [Bean Lifecycle] BookService initialized successfully in ApplicationContext (Singleton scope).");
+    }
+
+    @jakarta.annotation.PreDestroy
+    public void onDestroy() {
+        org.slf4j.LoggerFactory.getLogger(BookService.class)
+            .info(">>> [Bean Lifecycle] BookService is about to be destroyed as ApplicationContext closes.");
+    }
+
     /**
      * Lấy danh sách toàn bộ sách có cache Redis.
      * Khi khách hàng truy cập nhiều, dữ liệu được lấy thẳng từ Redis với độ trễ thấp (~2-3ms).

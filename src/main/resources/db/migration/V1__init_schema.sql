@@ -1,15 +1,10 @@
-SET NAMES 'utf8mb4';
-SET CHARACTER SET utf8mb4;
-
--- Tạo Database nếu chưa tồn tại
-CREATE DATABASE IF NOT EXISTS bookstore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE bookstore;
+-- V1__init_schema.sql: Khởi tạo toàn bộ cấu trúc bảng và chỉ mục (Flyway Migration)
 
 -- 1. Bảng Người dùng
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL, -- Mật khẩu băm BCrypt
+    password VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     full_name VARCHAR(100),
     role VARCHAR(20) NOT NULL DEFAULT 'ROLE_CUSTOMER',
@@ -33,7 +28,7 @@ CREATE TABLE IF NOT EXISTS categories (
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- 4. Bảng Sách
+-- 4. Bảng Sách (Tích hợp Khóa lạc quan 'version' và Chỉ mục tổ hợp Composite Index)
 CREATE TABLE IF NOT EXISTS books (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
@@ -84,31 +79,3 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE RESTRICT
 );
-
--- =========================================================
--- DỮ LIỆU MẪU (SEED DATA)
--- =========================================================
-
--- Nạp Tài khoản (Mật khẩu băm BCrypt đại diện cho "123456")
-INSERT INTO users (username, password, email, full_name, role) VALUES
-('admin', '$2a$10$Xgs.5AuzqT.psQzd0kzmI.MZwolfvEPAmlhHp3a3d5N7dHO42QGW.', 'admin@bookstore.com', 'Quản Trị Viên', 'ROLE_ADMIN'),
-('customer1', '$2a$10$Xgs.5AuzqT.psQzd0kzmI.MZwolfvEPAmlhHp3a3d5N7dHO42QGW.', 'user1@gmail.com', 'Nguyễn Văn A', 'ROLE_CUSTOMER')
-ON DUPLICATE KEY UPDATE username=username;
-
--- Nạp Tác giả
-INSERT INTO authors (name, bio) VALUES
-('Tô Hoài', 'Nhà văn nổi tiếng với tác phẩm Dế Mèn Phiêu Lưu Ký'),
-('J.K. Rowling', 'Tác giả bộ truyện Harry Potter lừng danh thế giới')
-ON DUPLICATE KEY UPDATE name=name;
-
--- Nạp Thể loại
-INSERT INTO categories (name, description) VALUES
-('Văn học Việt Nam', 'Các tác phẩm văn học trong nước'),
-('Viễn tưởng', 'Sách khoa học viễn tưởng và phép thuật')
-ON DUPLICATE KEY UPDATE name=name;
-
--- Nạp Sách
-INSERT INTO books (title, price, stock_quantity, description, author_id, category_id, version) VALUES
-('Dế Mèn Phiêu Lưu Ký', 50000.00, 100, 'Truyện đồng thoại dành cho thiếu nhi', 1, 1, 0),
-('Harry Potter và Hòn Đá Phù Thủy', 150000.00, 50, 'Tập 1 bộ truyện Harry Potter', 2, 2, 0)
-ON DUPLICATE KEY UPDATE title=title;

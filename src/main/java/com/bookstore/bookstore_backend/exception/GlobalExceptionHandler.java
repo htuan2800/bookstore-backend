@@ -56,6 +56,12 @@ public class GlobalExceptionHandler {
             .body(new ApiErrorResponse(400, "Validation Failed", firstMessage, fieldErrors));
     }
 
+    @ExceptionHandler(org.springframework.dao.OptimisticLockingFailureException.class)
+    public ResponseEntity<ApiErrorResponse> conflictConcurrent(org.springframework.dao.OptimisticLockingFailureException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(new ApiErrorResponse(409, "Conflict", "Dữ liệu sách đã được cập nhật bởi một giao dịch khác cùng thời điểm. Vui lòng thử lại."));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> internal(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

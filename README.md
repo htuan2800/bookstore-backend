@@ -13,8 +13,10 @@ Dự án xây dựng hệ thống RESTful API phục vụ bài toán thương m�
 
 ### Các công nghệ và thư viện cốt lõi
 * **Ngôn ngữ & Nền tảng:** Java 25 (LTS), Spring Boot 4.x
-* **Data Access & Tối ưu hóa (Tầng 3):** Spring Data JPA, Hibernate ORM, MySQL 8.0, `@EntityGraph` (chống N+1 Query), Composite Index (Chỉ mục tổ hợp), Spring Data `Pageable`
-* **Bộ nhớ đệm (Caching):** Redis 7 (TTL 10 phút, Serialization JSON Jackson, Fail-safe Graceful Degradation)
+* **Cấu hình & Vòng đời:** Cấu hình chuẩn YAML (`application.yml`, `application-dev.yml`, `application-prod.yml`), Quản lý vòng đời Bean với `@PostConstruct` và `@PreDestroy`
+* **Di chuyển cơ sở dữ liệu:** Flyway Migration (`V1__init_schema.sql`, `V2__seed_data.sql`)
+* **Data Access & Tối ưu hóa (Tầng 3):** Spring Data JPA, Hibernate ORM, MySQL 8.0, Khóa lạc quan Optimistic Locking (`@Version`), `@EntityGraph` (chống N+1 Query), Composite Index (Chỉ mục tổ hợp), Spring Data `Pageable`
+* **Bộ nhớ đệm (Caching):** Redis 8 (TTL 10 phút, Serialization JSON Jackson, Fail-safe Graceful Degradation)
 * **Bảo mật:** Spring Security, JSON Web Token (Stateless JWT), Password Hashing (BCrypt)
 * **Xác thực dữ liệu:** Bean Validation (`jakarta.validation`)
 * **Kiểm thử tự động:** JUnit 5, Mockito, `@WebMvcTest` (Slice Test), `@SpringBootTest` (Integration Test), H2 In-Memory DB
@@ -98,7 +100,7 @@ Dự án được trang bị bộ kiểm thử tự động toàn diện, chạy
 
 ## 6. Cấu hình biến môi trường (`.env`)
 Dự án tuân thủ nguyên tắc 12-Factor App, không lưu trữ thông tin mật trong mã nguồn:
-* Môi trường dev: Sử dụng `application-dev.properties`.
+* Môi trường dev: Sử dụng `application-dev.yml` (hoặc biến môi trường cục bộ).
 * Môi trường prod (Docker): Tự động nạp từ file `.env` qua các biến:
   * `DB_URL`: Chuỗi kết nối JDBC MySQL.
   * `DB_USERNAME`: Tên đăng nhập cơ sở dữ liệu.

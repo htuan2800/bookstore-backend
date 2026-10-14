@@ -2,8 +2,8 @@
 
 -- 1. Nạp Tài khoản (Mật khẩu băm BCrypt của "123456")
 INSERT INTO users (id, username, password, email, full_name, role) VALUES
-(1, 'admin', '$2a$10$Xgs.5AuzqT.psQzd0kzmI.MZwolfvEPAmlhHp3a3d5N7dHO42QGW.', 'admin@bookstore.com', 'Quản Trị Viên', 'ROLE_ADMIN'),
-(2, 'customer1', '$2a$10$Xgs.5AuzqT.psQzd0kzmI.MZwolfvEPAmlhHp3a3d5N7dHO42QGW.', 'user1@gmail.com', 'Nguyễn Văn A', 'ROLE_CUSTOMER')
+(1, 'admin', '$2a$10$G7H1CaSaBN99h3cw6CHK0OX6.08Q19KdXXGoP5gv7nTggkHHiOmSS', 'admin@bookstore.com', 'Quản Trị Viên', 'ROLE_ADMIN'),
+(2, 'customer1', '$2a$10$G7H1CaSaBN99h3cw6CHK0OX6.08Q19KdXXGoP5gv7nTggkHHiOmSS', 'user1@gmail.com', 'Nguyễn Văn A', 'ROLE_CUSTOMER')
 ON DUPLICATE KEY UPDATE username=username;
 
 -- 2. Nạp Tác giả

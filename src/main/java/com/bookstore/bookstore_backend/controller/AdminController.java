@@ -51,8 +51,7 @@ public class AdminController {
     private final CategoryService categoryService;
     private final UserService userService;
 
-    // === QUẢN LÝ SÁCH ===
-
+    //QUẢN LÝ SÁCH
     @GetMapping("/books")
     public ResponseEntity<List<BookResponse>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
@@ -74,8 +73,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // === QUẢN LÝ ĐƠN HÀNG ===
-
+    //QUẢN LÝ ĐƠN HÀNG
     @GetMapping("/orders")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
@@ -88,8 +86,7 @@ public class AdminController {
         return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
     }
 
-    // === QUẢN LÝ TÁC GIẢ (AUTHORS) ===
-
+    //QUẢN LÝ TÁC GIẢ (AUTHORS)
     @GetMapping("/authors")
     public ResponseEntity<List<Author>> getAllAuthors() {
         return ResponseEntity.ok(authorService.findAll());
@@ -116,8 +113,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // === QUẢN LÝ THỂ LOẠI (CATEGORIES) ===
-
+    //QUẢN LÝ THỂ LOẠI (CATEGORIES)
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         return ResponseEntity.ok(categoryService.findAll());
@@ -144,8 +140,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // === QUẢN LÝ NGƯỜI DÙNG (USERS) ===
-
+    //QUẢN LÝ NGƯỜI DÙNG (USERS)
     @GetMapping("/users")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());

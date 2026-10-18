@@ -12,7 +12,7 @@ import com.bookstore.bookstore_backend.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class AuthorService {
 
     private final AuthorRepository authorRepository;

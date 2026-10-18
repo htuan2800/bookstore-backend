@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequestMapping("/api/books")
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;

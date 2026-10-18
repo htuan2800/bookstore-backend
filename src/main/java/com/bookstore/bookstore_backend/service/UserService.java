@@ -14,7 +14,7 @@ import com.bookstore.bookstore_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;

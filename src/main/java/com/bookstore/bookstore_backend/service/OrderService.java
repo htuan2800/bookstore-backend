@@ -23,7 +23,7 @@ import com.bookstore.bookstore_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;

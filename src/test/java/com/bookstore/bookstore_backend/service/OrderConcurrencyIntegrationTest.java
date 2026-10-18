@@ -117,11 +117,9 @@ class OrderConcurrencyIntegrationTest {
     @Test
     @DisplayName("Thực nghiệm Rollback: Ngoại lệ xảy ra giữa chừng phải rollback sạch toàn bộ DB")
     void testOrderRollback_WhenExceptionOccurs_DatabaseStateIsPreserved() {
-        // Dọn dẹp
         orderRepository.deleteAll();
         cartItemRepository.deleteAll();
 
-        // Tạo 2 sách: Sách 1 còn 10 cuốn, Sách 2 chỉ còn 1 cuốn
         Book book1 = new Book();
         book1.setTitle("Sách Rollback Test 1");
         book1.setPrice(new BigDecimal("50000.00"));
@@ -151,7 +149,7 @@ class OrderConcurrencyIntegrationTest {
             orderService.placeOrder("user_rollback_test", new OrderRequest("Địa chỉ test rollback"));
         });
 
-        // KIỂM CHỨNG TÍNH TOÀN VẸN CỦA GIAO DỊCH (ROLLBACK HOÀN TOÀN)
+        // KIỂM CHỨNG TÍNH TOÀN VẸN
         // 1. Sách 1 không bị trừ kho dở dang (vẫn nguyên 10 cuốn)
         Book reloadedBook1 = bookRepository.findById(book1.getId()).orElseThrow();
         assertEquals(10, reloadedBook1.getStockQuantity(), "Tồn kho Sách 1 phải giữ nguyên 10 cuốn sau rollback");

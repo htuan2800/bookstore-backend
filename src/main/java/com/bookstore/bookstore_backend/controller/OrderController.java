@@ -20,12 +20,9 @@ import com.bookstore.bookstore_backend.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-/**
- * API đơn hàng cho Customer — đặt hàng và xem đơn của mình.
- */
 @RestController
 @RequestMapping("/api/orders")
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;

@@ -4,7 +4,7 @@ services:
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: bookstore
@@ -13,7 +13,7 @@ services:
       - "3310:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Tự động chạy script tạo database & dữ liệu mẫu
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Để Flyway trong Spring Boot tự động quản lý migration (V1, V2)
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
       interval: 5s
@@ -23,7 +23,7 @@ services:
   redis-cache:
     image: redis:8-alpine
     container_name: redis-cache
-    restart: always
+    restart: unless-stopped
     ports:
       - "6379:6379"
     healthcheck:
@@ -35,7 +35,7 @@ services:
   book-store-api:
     build: .
     container_name: book-store-api
-    restart: always
+    restart: unless-stopped
     depends_on:
       mysql-db:
         condition: service_healthy  # Chỉ khởi động Spring Boot khi MySQL đã sẵn sàng

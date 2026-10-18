@@ -20,7 +20,7 @@ import com.bookstore.bookstore_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class CartService {
 
     private final CartItemRepository cartItemRepository;

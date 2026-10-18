@@ -12,7 +12,7 @@ import com.bookstore.bookstore_backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;

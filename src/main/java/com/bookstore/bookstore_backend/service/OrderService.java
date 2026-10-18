@@ -29,6 +29,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public OrderResponse placeOrder(String username, OrderRequest req) {
@@ -82,6 +83,9 @@ public class OrderService {
 
         // 4. Xóa giỏ hàng
         cartItemRepository.deleteByUserId(user.getId());
+
+        // 5. Gửi thông báo (Email/SMS)
+        notificationService.send(user.getEmail(), "Đơn hàng #" + savedOrder.getId() + " đã được tạo");
 
         return toResponse(savedOrder);
     }

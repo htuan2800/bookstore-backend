@@ -27,6 +27,7 @@ import com.bookstore.bookstore_backend.entity.CartItem;
 import com.bookstore.bookstore_backend.entity.Order;
 import com.bookstore.bookstore_backend.entity.User;
 import com.bookstore.bookstore_backend.exception.InsufficientStockException;
+import com.bookstore.bookstore_backend.exception.ResourceNotFoundException;
 import com.bookstore.bookstore_backend.repository.CartItemRepository;
 import com.bookstore.bookstore_backend.repository.OrderRepository;
 import com.bookstore.bookstore_backend.repository.UserRepository;
@@ -42,6 +43,9 @@ class OrderServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private OrderService orderService;
@@ -147,5 +151,30 @@ class OrderServiceTest {
         assertThrows(IllegalArgumentException.class, () -> {
             orderService.updateOrderStatus(1L, "STATUS_KHONG_HOP_LE");
         });
+    }
+
+    @Test
+    @DisplayName("Kiểm tra phân quyền sở hữu (IDOR): User A không thể xem đơn hàng của User B")
+    void getOrderById_ThrowsException_WhenUserDoesNotOwnOrder() {
+        User userA = new User();
+        userA.setId(1L);
+        userA.setUsername("userA");
+
+        User userB = new User();
+        userB.setId(2L);
+        userB.setUsername("userB");
+
+        Order orderOfUserB = new Order();
+        orderOfUserB.setId(888L);
+        orderOfUserB.setUser(userB);
+
+        when(userRepository.findByUsernameOrEmail("userA", "userA")).thenReturn(Optional.of(userA));
+        when(orderRepository.findById(888L)).thenReturn(Optional.of(orderOfUserB));
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            orderService.getOrderById("userA", 888L);
+        });
+
+        assertEquals("Không tìm thấy đơn hàng với ID: 888", ex.getMessage());
     }
 }

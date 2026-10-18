@@ -30,6 +30,13 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    /*
+        Hoặc sử dụng: 
+        @Qualifier("smsNotificationService")
+        private final NotificationService notificationService;
+        Hay
+        private final NotificationService smsNotificationService;
+    */
 
     @Transactional
     public OrderResponse placeOrder(String username, OrderRequest req) {

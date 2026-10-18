@@ -52,5 +52,6 @@ management:
 logging:
   level:
     org.springframework.security: DEBUG
+    com.bookstore.bookstore_backend: DEBUG
   file:
     name: app.log

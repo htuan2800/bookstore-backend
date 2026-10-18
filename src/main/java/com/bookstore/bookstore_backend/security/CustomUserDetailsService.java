@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.bookstore.bookstore_backend.entity.User;
 import com.bookstore.bookstore_backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) {
-        com.bookstore.bookstore_backend.entity.User u = userRepository
+        User u = userRepository
             .findByUsernameOrEmail(identifier, identifier)
             .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản"));
         if (u.isDeleted()) {

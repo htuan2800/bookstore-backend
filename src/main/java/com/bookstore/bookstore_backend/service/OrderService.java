@@ -33,17 +33,16 @@ public class OrderService {
     private final UserRepository userRepository;
 
     public OrderService(
-        @Qualifier("smsNotificationService") NotificationService notificationService,
-        OrderRepository orderRepository,
-        CartItemRepository cartItemRepository,
-        UserRepository userRepository
-    ) {
+            @Qualifier("smsNotificationService") NotificationService notificationService,
+            OrderRepository orderRepository,
+            CartItemRepository cartItemRepository,
+            UserRepository userRepository) {
         this.notificationService = notificationService;
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
     }
-    
+
     @Transactional
     public OrderResponse placeOrder(String username, OrderRequest req) {
         User user = findUser(username);
@@ -110,12 +109,12 @@ public class OrderService {
     }
 
     public OrderResponse getOrderById(String username, Long orderId) {
-        User user = findUser(username);
+        User currentUser = findUser(username);
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
 
         // Customer chỉ được xem đơn của mình
-        if (!order.getUser().getId().equals(user.getId())) {
+        if (!currentUser.getRole().equals("ROLE_ADMIN") && !order.getUser().getId().equals(currentUser.getId())) {
             throw new ResourceNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId);
         }
 

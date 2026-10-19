@@ -3,6 +3,7 @@ package com.bookstore.bookstore_backend.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,24 +21,29 @@ import com.bookstore.bookstore_backend.repository.CartItemRepository;
 import com.bookstore.bookstore_backend.repository.OrderRepository;
 import com.bookstore.bookstore_backend.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
+// import lombok.RequiredArgsConstructor;
 
+// @RequiredArgsConstructor
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
+    private final NotificationService notificationService;
     private final OrderRepository orderRepository;
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
-    private final NotificationService notificationService;
-    /*
-        Hoặc sử dụng: 
-        @Qualifier("smsNotificationService")
-        private final NotificationService notificationService;
-        Hay
-        private final NotificationService smsNotificationService;
-    */
 
+    public OrderService(
+        @Qualifier("smsNotificationService") NotificationService notificationService,
+        OrderRepository orderRepository,
+        CartItemRepository cartItemRepository,
+        UserRepository userRepository
+    ) {
+        this.notificationService = notificationService;
+        this.orderRepository = orderRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.userRepository = userRepository;
+    }
+    
     @Transactional
     public OrderResponse placeOrder(String username, OrderRequest req) {
         User user = findUser(username);
@@ -62,8 +68,8 @@ public class OrderService {
             // Kiểm tra tồn kho
             if (book.getStockQuantity() < cartItem.getQuantity()) {
                 throw new InsufficientStockException(
-                    "Sách \"" + book.getTitle() + "\" chỉ còn " + book.getStockQuantity()
-                    + " cuốn, nhưng giỏ hàng yêu cầu " + cartItem.getQuantity() + " cuốn");
+                        "Sách \"" + book.getTitle() + "\" chỉ còn " + book.getStockQuantity()
+                                + " cuốn, nhưng giỏ hàng yêu cầu " + cartItem.getQuantity() + " cuốn");
             }
 
             // Trừ tồn kho
@@ -79,8 +85,7 @@ public class OrderService {
 
             // Tính tổng
             totalAmount = totalAmount.add(
-                book.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()))
-            );
+                    book.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
         }
 
         order.setTotalAmount(totalAmount);
@@ -100,14 +105,14 @@ public class OrderService {
     public List<OrderResponse> getMyOrders(String username) {
         User user = findUser(username);
         return orderRepository.findByUserIdOrderByCreatedAtDesc(user.getId()).stream()
-            .map(this::toResponse)
-            .toList();
+                .map(this::toResponse)
+                .toList();
     }
 
     public OrderResponse getOrderById(String username, Long orderId) {
         User user = findUser(username);
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
 
         // Customer chỉ được xem đơn của mình
         if (!order.getUser().getId().equals(user.getId())) {
@@ -121,14 +126,14 @@ public class OrderService {
 
     public List<OrderResponse> getAllOrders() {
         return orderRepository.findAll().stream()
-            .map(this::toResponse)
-            .toList();
+                .map(this::toResponse)
+                .toList();
     }
 
     @Transactional
     public OrderResponse updateOrderStatus(Long orderId, String status) {
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId));
 
         List<String> validStatuses = List.of("PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED");
         if (!validStatuses.contains(status)) {
@@ -141,27 +146,25 @@ public class OrderService {
 
     private User findUser(String username) {
         return userRepository.findByUsernameOrEmail(username, username)
-            .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng"));
     }
 
     private OrderResponse toResponse(Order order) {
         List<OrderItemResponse> items = order.getItems().stream()
-            .map(item -> new OrderItemResponse(
-                item.getBook().getId(),
-                item.getBook().getTitle(),
-                item.getQuantity(),
-                item.getPrice(),
-                item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
-            ))
-            .toList();
+                .map(item -> new OrderItemResponse(
+                        item.getBook().getId(),
+                        item.getBook().getTitle(),
+                        item.getQuantity(),
+                        item.getPrice(),
+                        item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))))
+                .toList();
 
         return new OrderResponse(
-            order.getId(),
-            order.getTotalAmount(),
-            order.getStatus(),
-            order.getShippingAddress(),
-            order.getCreatedAt(),
-            items
-        );
+                order.getId(),
+                order.getTotalAmount(),
+                order.getStatus(),
+                order.getShippingAddress(),
+                order.getCreatedAt(),
+                items);
     }
 }

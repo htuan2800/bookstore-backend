@@ -19,7 +19,20 @@ INSERT INTO categories (id, name, description) VALUES
 ON DUPLICATE KEY UPDATE name=name;
 
 -- 4. Nạp Sách
-INSERT INTO books (id, title, price, stock_quantity, description, author_id, category_id, version) VALUES
-(1, 'Dế Mèn Phiêu Lưu Ký', 50000.00, 100, 'Truyện đồng thoại kinh điển dành cho thiếu nhi', 1, 1, 0),
-(2, 'Harry Potter và Hòn Đá Phù Thủy', 150000.00, 50, 'Tập 1 bộ truyện phép thuật Harry Potter', 2, 2, 0)
-ON DUPLICATE KEY UPDATE title=title;
+INSERT INTO books (id, title, price, stock_quantity, description, author_id, category_id, version)
+WITH RECURSIVE book_seq AS (
+    SELECT 3 AS n
+    UNION ALL
+    SELECT n + 1 FROM book_seq WHERE n <= 102
+)
+SELECT 
+    n AS id,
+    CONCAT('Sách Kỹ Thuật & Văn Học Tập ', n) AS title,
+    ROUND(50000 + (n * 1500), -3) AS price,
+    (20 + (n % 80)) AS stock_quantity,
+    CONCAT('Mô tả chi tiết nội dung cuốn sách mẫu số ', n, ' dùng cho kiểm thử hiệu năng.') AS description,
+    IF(n % 2 = 0, 2, 1) AS author_id,
+    IF(n % 2 = 0, 2, 1) AS category_id,
+    0 AS version
+FROM book_seq
+ON DUPLICATE KEY UPDATE title = title;

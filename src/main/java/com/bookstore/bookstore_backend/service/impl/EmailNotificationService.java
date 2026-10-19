@@ -28,7 +28,7 @@ public class EmailNotificationService implements NotificationService {
 
     @Override
     public String send(String to, String message) {
-        String result = "Gửi SMS thành công tới: " + to + " với nội dung: " + message;
+        String result = "Gửi Email thành công tới: " + to + " với nội dung: " + message;
         log.info(result);
         return result;
     }

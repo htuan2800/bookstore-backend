@@ -268,7 +268,7 @@
           <option value="ALL">Tất cả đơn hàng</option>
           <option value="PENDING">Chờ xác nhận (PENDING)</option>
           <option value="CONFIRMED">Đã xác nhận (CONFIRMED)</option>
-          <option value="SHIPPED">Đang giao hàng (SHIPPED)</option>
+          <option value="SHIPPING">Đang giao hàng (SHIPPING)</option>
           <option value="DELIVERED">Đã giao thành công (DELIVERED)</option>
           <option value="CANCELLED">Đã hủy (CANCELLED)</option>
         </select>
@@ -676,7 +676,7 @@ function formatDate(s) {
 const STATUS_MAP = {
   PENDING:   { label: 'Chờ xác nhận', cls: 'bg-amber-100 text-amber-800' },
   CONFIRMED: { label: 'Đã xác nhận', cls: 'bg-blue-100 text-blue-800' },
-  SHIPPED:   { label: 'Đang giao',   cls: 'bg-purple-100 text-purple-800' },
+  SHIPPING:   { label: 'Đang giao',   cls: 'bg-purple-100 text-purple-800' },
   DELIVERED: { label: 'Đã giao',     cls: 'bg-emerald-100 text-emerald-800' },
   CANCELLED: { label: 'Đã hủy',      cls: 'bg-red-100 text-red-800' }
 };
@@ -906,7 +906,7 @@ function updateOrdersStats() {
   document.getElementById('statTotalOrders').textContent = allOrders.length;
   document.getElementById('ordersBadgeCount').textContent = allOrders.length;
   const pending = allOrders.filter(o => o.status === 'PENDING').length;
-  const shipped = allOrders.filter(o => o.status === 'SHIPPED').length;
+  const shipped = allOrders.filter(o => o.status === 'SHIPPING').length;
   const revenue = allOrders.filter(o => o.status !== 'CANCELLED').reduce((sum, o) => sum + (o.totalAmount || 0), 0);
   document.getElementById('statPendingOrders').textContent = pending;
   document.getElementById('statShippedOrders').textContent = shipped;
@@ -933,7 +933,7 @@ function renderOrdersTable(orders) {
           <select onchange="changeOrderStatus(${o.id}, this.value)" class="field py-1 px-2.5 text-xs font-semibold rounded-full cursor-pointer ${st.cls}">
             <option value="PENDING" ${o.status === 'PENDING' ? 'selected' : ''}>Chờ xác nhận</option>
             <option value="CONFIRMED" ${o.status === 'CONFIRMED' ? 'selected' : ''}>Đã xác nhận</option>
-            <option value="SHIPPED" ${o.status === 'SHIPPED' ? 'selected' : ''}>Đang giao hàng</option>
+            <option value="SHIPPING" ${o.status === 'SHIPPING' ? 'selected' : ''}>Đang giao hàng</option>
             <option value="DELIVERED" ${o.status === 'DELIVERED' ? 'selected' : ''}>Đã giao</option>
             <option value="CANCELLED" ${o.status === 'CANCELLED' ? 'selected' : ''}>Đã hủy</option>
           </select>
